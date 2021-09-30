@@ -1,0 +1,54 @@
+{
+    'feature':
+        {
+            'tags': [],
+            'location': {'line': 1, 'column': 1},
+            'language': 'en',
+            'keyword': 'Feature',
+            'name': 'Test feature',
+            'description': '    This feature is used for basic functional tests of gherlint',
+            'children': [
+                {
+                    'scenario': {
+                        'id': '3',
+                        'tags': [],
+                        'location': {
+                            'line': 5,
+                            'column': 5
+                        },
+                        'keyword': 'Scenario',
+                        'name': 'Test scenario',
+                        'description': '',
+                        'steps': [
+                            {
+                                'id': '0',
+                                'location': {
+                                    'line': 7, 'column': 9
+                                },
+                                'keyword': 'Given ',
+                                'text': 'the precondition is met'
+                            },
+                            {
+                                'id': '1',
+                                'location': {
+                                    'line': 8, 'column': 9
+                                },
+                                'keyword': 'When ',
+                                'text': 'I do something'
+                            },
+                            {
+                                'id': '2',
+                                'location': {
+                                    'line': 9, 'column': 9
+                                },
+                                'keyword': 'Then ',
+                                'text': 'the expected response should happen'
+                            }
+                        ],
+                        'examples': []
+                    }
+                }
+            ]
+        },
+    'comments': []
+}

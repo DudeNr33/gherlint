@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "gherlint"
+version = "0.1.0"
+description = "Linter for Gherkin feature files"
+authors = ["Andreas Finkler"]
+license = "MIT license"
+readme = "README.md"
+homepage = "https://github.com/DudeNr33/gherlint"
+keywords = ["gherkin", "cucumber", "lint", "static analysis", "internal quality"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Quality Assurance"
+]
+
+[tool.poetry.scripts]
+gherlint = 'gherlint.__main__:main'
+
+[tool.poetry.dependencies]
+python = "^3.7"
+gherkin-official = "^22.0.0"
+click = "^8.0.1"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.11.1"
+pytest = "^6.2.5"
+pre-commit = "^2.15.0"
+black = "^21.9b0"
+isort = "^5.9.3"
+pylint-pytest = "^1.1.2"
+mypy = "^0.910"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.master]
+load-plugins = "pylint_pytest,pylint.extensions.mccabe"
+
+[tool.pylint.messages_control]
+enable = "useless-suppression"
+disable = "missing-module-docstring,missing-function-docstring"
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.design]
+min-public-methods = 1
+max-args=8
