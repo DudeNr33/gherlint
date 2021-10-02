@@ -21,6 +21,7 @@ repos:
     rev: 5.9.3
     hooks:
       - id: isort
+        args: [--profile, black]
   - repo: local
     hooks:
       - id: pylint
@@ -38,4 +39,4 @@ repos:
         types: [python]
         args: [--ignore-missing-imports]
         require_serial: true
-        additional_dependencies: [types-click, gherkin-official]
+        additional_dependencies: [types-click]

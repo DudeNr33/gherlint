@@ -40,7 +40,7 @@ load-plugins = "pylint_pytest,pylint.extensions.mccabe"
 
 [tool.pylint.messages_control]
 enable = "useless-suppression"
-disable = "missing-module-docstring,missing-function-docstring"
+disable = "missing-class-docstring,missing-module-docstring,missing-function-docstring"
 
 [tool.pylint.format]
 max-line-length = 120
@@ -48,3 +48,6 @@ max-line-length = 120
 [tool.pylint.design]
 min-public-methods = 1
 max-args=8
+
+[tool.isort]
+profile = "black"
