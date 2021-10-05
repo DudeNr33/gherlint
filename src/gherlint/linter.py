@@ -4,6 +4,7 @@ from typing import Union
 from gherkin.parser import Parser
 
 from gherlint.checkers.completeness import CompletenessChecker
+from gherlint.checkers.statistics import Statistics
 from gherlint.objectmodel.nodes import Document
 from gherlint.walker import ASTWalker
 
@@ -13,7 +14,7 @@ class GherkinLinter:
 
     def __init__(self, path: str) -> None:
         self.path = Path(path)
-        self.walker = ASTWalker(checkers=[CompletenessChecker()])
+        self.walker = ASTWalker(checkers=[CompletenessChecker(), Statistics()])
         self.parser = Parser()
 
     def run(self) -> None:
@@ -23,6 +24,7 @@ class GherkinLinter:
         else:
             for filepath in self.path.rglob("*.feature"):
                 self.lint_file(filepath)
+        Statistics().print_summary()
 
     def lint_file(self, filepath: Union[str, Path]):
         data = self.parser.parse(str(filepath))
