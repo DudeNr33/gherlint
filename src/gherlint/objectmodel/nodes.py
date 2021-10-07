@@ -15,6 +15,13 @@ class Node(ABC):
     def __init__(self, parent: Optional[Node]):
         self.parent = parent
 
+    def get_root(self) -> Node:
+        """Get the root node, i.e. the topmost parent in the hierarchy."""
+        current = self
+        while current.parent is not None:
+            current = current.parent
+        return current
+
     @classmethod
     @abstractmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Node:

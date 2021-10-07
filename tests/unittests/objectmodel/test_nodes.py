@@ -1,9 +1,12 @@
+from typing import List
+
 import pytest
 
 from gherlint.objectmodel import Document
 from gherlint.objectmodel.nodes import (
     Examples,
     Feature,
+    Node,
     Scenario,
     ScenarioOutline,
     Step,
@@ -199,3 +202,65 @@ class TestExamples:
         assert isinstance(examples, Examples)
         assert examples.parameters == ["x", "y"]
         assert examples.values == {"x": ["1", "a"], "y": ["2", "b"]}
+
+
+class TestMisc:
+    @staticmethod
+    def test_get_root():
+        data = {
+            "filename": "foo.feature",
+            "feature": {
+                "tags": [],
+                "location": {"line": 1, "column": 1},
+                "language": "en",
+                "keyword": "Feature",
+                "name": "Test feature",
+                "description": "",
+                "children": [
+                    {
+                        "scenario": {
+                            "id": "3",
+                            "tags": [],
+                            "location": {"line": 5, "column": 5},
+                            "keyword": "Scenario",
+                            "name": "Test scenario",
+                            "description": "",
+                            "steps": [
+                                {
+                                    "id": "0",
+                                    "location": {"line": 7, "column": 9},
+                                    "keyword": "Given ",
+                                    "text": "the precondition is met",
+                                },
+                                {
+                                    "id": "1",
+                                    "location": {"line": 8, "column": 9},
+                                    "keyword": "When ",
+                                    "text": "I do something",
+                                },
+                                {
+                                    "id": "2",
+                                    "location": {"line": 9, "column": 9},
+                                    "keyword": "Then ",
+                                    "text": "the expected response should happen",
+                                },
+                            ],
+                            "examples": [],
+                        }
+                    }
+                ],
+            },
+            "comments": [],
+        }
+
+        def get_all_children(node: Node, child_nodes: List[Node]) -> List[Node]:
+            if hasattr(node, "children"):
+                child_nodes.extend(node.children)  # type: ignore
+                for child in node.children:  # type: ignore
+                    get_all_children(child, child_nodes)
+            return child_nodes
+
+        root_node = Document.from_dict(data)
+        child_nodes = [root_node.feature]
+        get_all_children(root_node.feature, child_nodes)
+        assert all(child.get_root() is root_node for child in child_nodes)
