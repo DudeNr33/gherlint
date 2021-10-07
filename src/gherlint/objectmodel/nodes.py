@@ -12,28 +12,42 @@ class Node(ABC):
     Base class for all concrete node types.
     """
 
+    def __init__(self, parent: Optional[Node]):
+        self.parent = parent
+
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Node:
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Node:
         """Create a node instance from the dictionary returned by the gherkin parser."""
 
 
 class Document(Node):
     """Represents the file itself"""
 
-    def __init__(self, feature: Optional[Feature], comments: List[str]):
-        self.name = ""
+    def __init__(
+        self,
+        filename: str,
+        feature: Optional[Feature],
+        comments: List[str],
+        parent=None,
+    ):
+        super().__init__(parent=parent)
+        self.filename = filename
         self.feature = feature
         self.comments = comments
         self.children = [feature]
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Document:
+    def from_dict(cls, data: Dict[str, Any], parent: Node = None) -> Document:
         feature_data = data.get("feature")
-        return cls(
-            feature=Feature.from_dict(feature_data) if feature_data else None,
+        instance = cls(
+            filename=data["filename"],
+            feature=None,
             comments=data["comments"],
         )
+        if feature_data:
+            instance.feature = Feature.from_dict(feature_data, parent=instance)
+        return instance
 
 
 class Feature(Node):
@@ -41,12 +55,14 @@ class Feature(Node):
 
     def __init__(
         self,
+        parent: Optional[Node],
         tags: List[str],
         language: str,
         name: str,
         description: str,
         children: List[Scenario],
     ):
+        super().__init__(parent=parent)
         self.tags = tags
         self.language = language
         self.name = name
@@ -54,19 +70,22 @@ class Feature(Node):
         self.children = children
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Feature:
-        return cls(
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Feature:
+        instance = cls(
+            parent=parent,
             tags=data["tags"],
             language=data["language"],
             name=data["name"],
             description=data["description"],
-            children=[
-                Scenario.from_dict(d["scenario"])
-                if d["scenario"]["keyword"] == "Scenario"
-                else ScenarioOutline.from_dict(d["scenario"])
-                for d in data["children"]
-            ],
+            children=[],
         )
+        instance.children = [
+            Scenario.from_dict(d["scenario"], parent=instance)
+            if d["scenario"]["keyword"] == "Scenario"
+            else ScenarioOutline.from_dict(d["scenario"], parent=instance)
+            for d in data["children"]
+        ]
+        return instance
 
 
 class Scenario(Node):
@@ -74,12 +93,14 @@ class Scenario(Node):
 
     def __init__(
         self,
+        parent: Optional[Node],
         tags: List[str],
         name: str,
         description: str,
         examples: List[Examples],
         children: List[Step],
     ):
+        super().__init__(parent=parent)
         self.tags = tags
         self.name = name
         self.description = description
@@ -87,14 +108,20 @@ class Scenario(Node):
         self.children = children
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Scenario:
-        return cls(
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Scenario:
+        instance = cls(
+            parent=parent,
             tags=data["tags"],
             name=data["name"],
             description=data["description"],
-            examples=[Examples.from_dict(d) for d in data["examples"]],
-            children=[Step.from_dict(s) for s in data["steps"]],
+            examples=[],
+            children=[],
         )
+        instance.examples = [
+            Examples.from_dict(d, parent=instance) for d in data["examples"]
+        ]
+        instance.children = [Step.from_dict(s, parent=instance) for s in data["steps"]]
+        return instance
 
 
 class ScenarioOutline(Scenario):
@@ -102,24 +129,27 @@ class ScenarioOutline(Scenario):
 
 
 class Step(Node):
-    def __init__(self, keyword: str, text: str):
+    def __init__(self, parent: Optional[Node], keyword: str, text: str):
+        super().__init__(parent=parent)
         self.keyword = keyword
         self.text = text
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Step:
-        return cls(data["keyword"], data["text"])
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Step:
+        return cls(parent, data["keyword"], data["text"])
 
 
 class Examples(Node):
     def __init__(
         self,
+        parent: Optional[Node],
         tags: List[str],
         name: str,
         description: str,
         parameters: List[str],
         values: Dict[str, List[str]],
     ):
+        super().__init__(parent=parent)
         self.tags = tags
         self.name = name
         self.description = description
@@ -127,13 +157,14 @@ class Examples(Node):
         self.values = values
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Examples:
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Examples:
         parameters: List[str] = [cell["value"] for cell in data["tableHeader"]["cells"]]
         values: Dict[str, List[str]] = {param: [] for param in parameters}
         for row in data["tableBody"]:
             for param, entry in zip(parameters, row["cells"]):
                 values[param].append(entry["value"])
         return cls(
+            parent=parent,
             tags=data["tags"],
             name=data["name"],  # can this be filled?!
             description=data["description"],

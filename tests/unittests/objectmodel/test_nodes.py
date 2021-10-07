@@ -13,7 +13,7 @@ from gherlint.objectmodel.nodes import (
 class TestDocument:
     @staticmethod
     def test_empty_document():
-        document = Document.from_dict({"comments": []})
+        document = Document.from_dict({"filename": "", "comments": []})
         assert isinstance(document, Document)
         assert document.feature is None
         assert document.comments == []
@@ -21,12 +21,13 @@ class TestDocument:
     @staticmethod
     def test_document_can_have_comments():
         comments = ["This is the first comment", "This is the second comment"]
-        document = Document.from_dict({"comments": comments})
+        document = Document.from_dict({"filename": "", "comments": comments})
         assert document.comments == comments
 
     @staticmethod
     def test_feature_object_is_created_automatically():
         data = {
+            "filename": "",
             "feature": {
                 "tags": [],
                 "location": {"line": 1, "column": 1},
@@ -58,7 +59,7 @@ class TestFeature:
 
     @staticmethod
     def test_empty_feature(feature_data):
-        feature = Feature.from_dict(feature_data)
+        feature = Feature.from_dict(feature_data, parent=None)
         assert isinstance(feature, Feature)
         assert feature.children == []
 
@@ -66,7 +67,7 @@ class TestFeature:
     def test_tagged_feature(feature_data):
         tags = ["tag1", "tag2"]
         feature_data["tags"] = tags
-        feature = Feature.from_dict(feature_data)
+        feature = Feature.from_dict(feature_data, parent=None)
         assert feature.tags == tags
 
     @staticmethod
@@ -98,7 +99,7 @@ class TestFeature:
             },
         ]
         feature_data["children"] = scenarios
-        feature = Feature.from_dict(feature_data)
+        feature = Feature.from_dict(feature_data, parent=None)
         assert len(feature.children) == 2
         assert isinstance(feature.children[0], Scenario)
         assert isinstance(feature.children[1], ScenarioOutline)
@@ -121,7 +122,7 @@ class TestScenario:
 
     @staticmethod
     def test_empty_scenario(scenario_data):
-        scenario = Scenario.from_dict(scenario_data)
+        scenario = Scenario.from_dict(scenario_data, parent=None)
         assert isinstance(scenario, Scenario)
         assert len(scenario.children) == 0
 
@@ -148,7 +149,7 @@ class TestScenario:
             },
         ]
         scenario_data["steps"] = steps
-        scenario = Scenario.from_dict(scenario_data)
+        scenario = Scenario.from_dict(scenario_data, parent=None)
         assert len(scenario.children) == 3
         assert all(isinstance(child, Step) for child in scenario.children)
 
@@ -194,7 +195,7 @@ class TestExamples:
 
     @staticmethod
     def test_example_creation(examples_data):
-        examples = Examples.from_dict(examples_data)
+        examples = Examples.from_dict(examples_data, parent=None)
         assert isinstance(examples, Examples)
         assert examples.parameters == ["x", "y"]
         assert examples.values == {"x": ["1", "a"], "y": ["2", "b"]}

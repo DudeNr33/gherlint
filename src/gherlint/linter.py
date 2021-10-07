@@ -28,5 +28,6 @@ class GherkinLinter:
 
     def lint_file(self, filepath: Union[str, Path]):
         data = self.parser.parse(str(filepath))
+        data["filename"] = str(filepath)
         document = Document.from_dict(data)
         self.walker.walk(document)
