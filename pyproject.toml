@@ -47,7 +47,7 @@ max-line-length = 120
 
 [tool.pylint.design]
 min-public-methods = 1
-max-args=8
+max-args=10
 
 [tool.isort]
 profile = "black"

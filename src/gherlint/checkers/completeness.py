@@ -4,24 +4,15 @@ every parameter that is used in a scenario outline has to be defined in the exam
 """
 
 from gherlint.checkers.base_checker import BaseChecker
-from gherlint.objectmodel.nodes import Document, Feature
+from gherlint.objectmodel.nodes import Feature
+from gherlint.reporting import Message
 
 
 class CompletenessChecker(BaseChecker):
     """Concerned about things like missing examples etc."""
 
-    @staticmethod
-    def visit_document(node: Document) -> None:
-        print(f"Visiting {node}")
-
-    @staticmethod
-    def leave_document(node: Document) -> None:
-        print(f"Leaving {node}")
-
-    @staticmethod
-    def visit_feature(node: Feature) -> None:
-        print(f"Visiting {node}")
-
-    @staticmethod
-    def leave_feature(node: Feature) -> None:
-        print(f"Leaving {node}")
+    def visit_feature(self, node: Feature) -> None:
+        if not node.name.strip():
+            self.reporter.add_message(
+                Message("missing-feature-name", "Feature has no name"), node
+            )

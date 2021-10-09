@@ -1,6 +1,7 @@
-from typing import Any, List
+from typing import List
 
 from gherlint.checkers.base_checker import BaseChecker
+from gherlint.objectmodel.nodes import Node
 
 
 class ASTWalker:
@@ -12,7 +13,7 @@ class ASTWalker:
     def __init__(self, checkers: List[BaseChecker]) -> None:
         self.checkers = checkers
 
-    def walk(self, node: Any) -> None:
+    def walk(self, node: Node) -> None:
         for checker in self.checkers:
             callback = getattr(
                 checker, f"visit_{node.__class__.__name__.lower()}", None

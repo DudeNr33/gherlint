@@ -12,8 +12,13 @@ class Node(ABC):
     Base class for all concrete node types.
     """
 
-    def __init__(self, parent: Optional[Node]):
+    def __init__(self, parent: Optional[Node], line: int, column: int):
         self.parent = parent
+        self.line = line
+        self.column = column
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(line={self.line}, column={self.column})"
 
     def get_root(self) -> Node:
         """Get the root node, i.e. the topmost parent in the hierarchy."""
@@ -33,21 +38,28 @@ class Document(Node):
 
     def __init__(
         self,
+        line: int,
+        column: int,
         filename: str,
         feature: Optional[Feature],
         comments: List[str],
         parent=None,
     ):
-        super().__init__(parent=parent)
+        super().__init__(parent, line, column)
         self.filename = filename
         self.feature = feature
         self.comments = comments
-        self.children = [feature]
+
+    @property
+    def children(self):
+        return [self.feature]
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Node = None) -> Document:
         feature_data = data.get("feature")
         instance = cls(
+            line=0,
+            column=0,
             filename=data["filename"],
             feature=None,
             comments=data["comments"],
@@ -62,6 +74,8 @@ class Feature(Node):
 
     def __init__(
         self,
+        line: int,
+        column: int,
         parent: Optional[Node],
         tags: List[str],
         language: str,
@@ -69,7 +83,7 @@ class Feature(Node):
         description: str,
         children: List[Scenario],
     ):
-        super().__init__(parent=parent)
+        super().__init__(parent, line, column)
         self.tags = tags
         self.language = language
         self.name = name
@@ -79,6 +93,8 @@ class Feature(Node):
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Feature:
         instance = cls(
+            line=data["location"]["line"],
+            column=data["location"]["column"],
             parent=parent,
             tags=data["tags"],
             language=data["language"],
@@ -100,6 +116,8 @@ class Scenario(Node):
 
     def __init__(
         self,
+        line: int,
+        column: int,
         parent: Optional[Node],
         tags: List[str],
         name: str,
@@ -107,7 +125,7 @@ class Scenario(Node):
         examples: List[Examples],
         children: List[Step],
     ):
-        super().__init__(parent=parent)
+        super().__init__(parent, line, column)
         self.tags = tags
         self.name = name
         self.description = description
@@ -117,6 +135,8 @@ class Scenario(Node):
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Scenario:
         instance = cls(
+            line=data["location"]["line"],
+            column=data["location"]["column"],
             parent=parent,
             tags=data["tags"],
             name=data["name"],
@@ -136,27 +156,37 @@ class ScenarioOutline(Scenario):
 
 
 class Step(Node):
-    def __init__(self, parent: Optional[Node], keyword: str, text: str):
-        super().__init__(parent=parent)
+    def __init__(
+        self, parent: Optional[Node], line: int, column: int, keyword: str, text: str
+    ):
+        super().__init__(parent, line, column)
         self.keyword = keyword
         self.text = text
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Step:
-        return cls(parent, data["keyword"], data["text"])
+        return cls(
+            line=data["location"]["line"],
+            column=data["location"]["column"],
+            parent=parent,
+            keyword=data["keyword"],
+            text=data["text"],
+        )
 
 
 class Examples(Node):
     def __init__(
         self,
         parent: Optional[Node],
+        line: int,
+        column: int,
         tags: List[str],
         name: str,
         description: str,
         parameters: List[str],
         values: Dict[str, List[str]],
     ):
-        super().__init__(parent=parent)
+        super().__init__(parent, line, column)
         self.tags = tags
         self.name = name
         self.description = description
@@ -171,6 +201,8 @@ class Examples(Node):
             for param, entry in zip(parameters, row["cells"]):
                 values[param].append(entry["value"])
         return cls(
+            line=data["location"]["line"],
+            column=data["location"]["column"],
             parent=parent,
             tags=data["tags"],
             name=data["name"],  # can this be filled?!

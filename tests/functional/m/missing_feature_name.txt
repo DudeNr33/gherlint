@@ -1,0 +1,2 @@
+************* missing_feature_name.feature
+missing_feature_name.feature:1:1: Feature has no name (missing-feature-name)
