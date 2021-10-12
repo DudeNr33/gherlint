@@ -1,0 +1,3 @@
+************* missing_scenario_name.feature
+missing_scenario_name.feature:3:5: Scenario has no name (missing-scenario-name)
+missing_scenario_name.feature:8:5: Scenario has no name (missing-scenario-name)
