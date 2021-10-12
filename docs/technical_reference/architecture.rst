@@ -77,7 +77,7 @@ it recursively calls ``walk(child_node)`` for all the ``node``'s children (if an
 Afterwards the ``leave_<node>`` method is called analogous to the ``enter_<node>`` method.
 
 .. uml::
-    :caption: Lintin Phase
+    :caption: Linting Phase
 
     main --> GherkinLinter ++ : run
         loop for file in path
@@ -107,3 +107,70 @@ Afterwards the ``leave_<node>`` method is called analogous to the ``enter_<node>
         end
         return
     return
+
+
+Message Handling
+----------------
+
+Each checker has a number of messages it can emit.
+``Message`` instances are stored in a central ``MessageStore``.
+The individual ``vist_<node>`` and ``leave_<node>`` methods are responsible to determine
+whether a specific message shall be emitted. They use the ``Reporter`` to add a message to emit
+by passing the ``name`` or ``id`` of the message. The ``Reporter`` looks up the message instance
+through the ``MessageStore``.
+
+.. uml::
+    :caption: Message Handling (Static View)
+
+    class Reporter {
+        add_message(msg: Message, node: Node)
+    }
+    class Message {
+        id : str
+        name: str
+        description : str
+    }
+    class MessageStore {
+        messages : List[Message]
+        register_message(msg: Message) -> None
+        get_by_id(id: str) -> Message
+        get_by_name(name: str) -> Message
+    }
+    class Checker {
+        messages : List[Message]
+        visit_<node>(node: Node) -> None
+        leave_<node>(node: Node) -> None
+    }
+
+    Checker "1" *-down- "n" Message
+    MessageStore "1" *-up- "n" Message
+    Checker *-- Reporter
+    Checker --> MessageStore : uses
+    Reporter --> MessageStore : uses
+
+
+.. uml::
+    :caption: Message Handling (Dynamic View)
+
+    participant Checker
+    participant Reporter
+    participant MessageStore
+    group Initialization of Checker
+        loop for message in messages
+            Checker --> MessageStore ++ : register_message(message)
+            return
+        end
+    end
+    group Linting Process
+        Checker --> Reporter ++ : add_message(id_or_name)
+            alt matches_id_pattern
+                Reporter --> MessageStore ++ : get_by_id(id_or_name)
+                return message
+            else matches_name_pattern
+                Reporter --> MessageStore ++ : get_by_name(id_or_name)
+                return message
+            end
+            Reporter->Reporter ++ : emit(message)
+            return
+        return
+    end
