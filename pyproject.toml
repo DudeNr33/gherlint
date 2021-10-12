@@ -18,7 +18,7 @@ classifiers = [
 gherlint = 'gherlint.__main__:main'
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 gherkin-official = "^22.0.0"
 click = "^8.0.1"
 
@@ -30,6 +30,9 @@ black = "^21.9b0"
 isort = "^5.9.3"
 pylint-pytest = "^1.1.2"
 mypy = "^0.910"
+Sphinx = "^4.2.0"
+python-docs-theme = "^2021.11.1"
+sphinxcontrib-plantuml = "^0.22"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
