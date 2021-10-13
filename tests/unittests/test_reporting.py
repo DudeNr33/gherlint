@@ -44,12 +44,13 @@ class TestMessage:
 
 
 class TestMessageStore:
-    messagestore = None
+    messagestore = MessageStore()
 
     @pytest.fixture(autouse=True)
-    def setup_messagestore(self):
+    def clear_messagestore(self):
         """Reset the message store before each test run"""
-        self.messagestore = MessageStore()
+        self.messagestore.id_to_message.clear()
+        self.messagestore.name_to_message.clear()
 
     def test_register_new_message_succeeds(self):
         msg = Message(id="C001", name="test-message", text="")
@@ -103,3 +104,12 @@ class TestMessageStore:
             UnknownMessageError, match="Message name 'unknown' not found."
         ):
             self.messagestore.get_by_name("unknown")
+
+    @staticmethod
+    def test_all_instances_share_same_data():
+        msgstore1 = MessageStore()
+        msgstore2 = MessageStore()
+        msg = Message("C001", "test-message", "")
+        msgstore1.register_message(msg)
+        assert msgstore1.id_to_message == msgstore2.id_to_message
+        assert msgstore1.name_to_message == msgstore2.name_to_message

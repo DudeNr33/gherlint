@@ -25,31 +25,38 @@ class Message:
 
 
 class MessageStore:
-    def __init__(self):
-        self.id_to_message: Dict[str, Message] = {}
-        self.name_to_message: Dict[str, Message] = {}
+    id_to_message: Dict[str, Message] = {}
+    name_to_message: Dict[str, Message] = {}
 
-    def register_message(self, message: Message) -> None:
-        if message.id in self.id_to_message:
+    @classmethod
+    def register_message(cls, message: Message) -> None:
+        if message.id in cls.id_to_message:
             raise DuplicateMessageError(
                 f"Message with ID {message.id} already registered"
             )
-        if message.name in self.name_to_message:
+        if message.name in cls.name_to_message:
             raise DuplicateMessageError(
                 f"Message with name {message.name} already registered"
             )
-        self.id_to_message[message.id] = message
-        self.name_to_message[message.name] = message
+        cls.id_to_message[message.id] = message
+        cls.name_to_message[message.name] = message
 
-    def get_by_id(self, message_id: str):
+    @classmethod
+    def clear(cls):
+        cls.id_to_message.clear()
+        cls.name_to_message.clear()
+
+    @classmethod
+    def get_by_id(cls, message_id: str):
         try:
-            return self.id_to_message[message_id]
+            return cls.id_to_message[message_id]
         except KeyError as exc:
             raise UnknownMessageError(f"Message ID {message_id} not found.") from exc
 
-    def get_by_name(self, name: str):
+    @classmethod
+    def get_by_name(cls, name: str):
         try:
-            return self.name_to_message[name]
+            return cls.name_to_message[name]
         except KeyError as exc:
             raise UnknownMessageError(f"Message name '{name}' not found.") from exc
 
