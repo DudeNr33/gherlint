@@ -16,7 +16,7 @@ class CompletenessChecker(BaseChecker):
     def visit_feature(self, node: nodes.Feature) -> None:
         if not node.name.strip():
             self.reporter.add_message(
-                Message("missing-feature-name", "Feature has no name"), node
+                Message("W001", "missing-feature-name", "Feature has no name"), node
             )
 
     def visit_scenario(self, node: nodes.Scenario) -> None:
@@ -30,5 +30,5 @@ class CompletenessChecker(BaseChecker):
     ) -> None:
         if not node.name.strip():
             self.reporter.add_message(
-                Message("missing-scenario-name", "Scenario has no name"), node
+                Message("W002", "missing-scenario-name", "Scenario has no name"), node
             )
