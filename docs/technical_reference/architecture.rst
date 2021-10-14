@@ -7,34 +7,33 @@ Main Concept
 ------------
 
 The linting process is coordinated by :py:class:`GherkinLinter`.
-It constructs abstract syntax trees for each file and passes them to :py:class:`ASTWalker`.
-The :py:class:`ASTWalker` has a list of checker classes (concrete implementations of
-:py:class:`BaseChecker`) which implement a ``Visitor`` pattern:
-each checker implements :py:func:`visit_nodetype` and :py:func:`leave_nodetype` methods for the elements it is interested.
-The :py:class:`ASTWalker` calls those methods on the checkers that have implemented them for each node while
-it traverses the tree.
-The checkers themselves define one or several :py:class:`Message` which can be emitted through a class that
-inherits from :py:class:`Reporter` (or defines the necessary methods).
+It constructs abstract syntax trees for each file and passes them to :py:class:`ASTWalker`,
+together with a list of checkers which where discovered by the :py:class:`CheckerRegistry`.
+The checker classes implement a ``Visitor`` pattern:
+each checker can implement :py:func:`visit_nodetype` and :py:func:`leave_nodetype` methods for the elements it is interested.
+The :py:class:`ASTWalker` calls those methods on the checkers for each node while it traverses the tree.
+The checkers themselves define one or several :py:class:`Message` which are registered in a central :py:class:`MessageStore`
+and can be emitted through a class that inherits from :py:class:`Reporter` (or defines the necessary methods).
 
 .. uml::
     :caption: Static Representation
 
-    set namespaceSeparator none
-    class "ASTWalker" as gherlint.walker.ASTWalker {
-    }
-    class "BaseChecker" as gherlint.checkers.base_checker.BaseChecker {
-    }
-    class "GherkinLinter" as gherlint.linter.GherkinLinter {
-    }
-    class "Message" as gherlint.reporting.Message {
-    }
-    class "Reporter" as gherlint.reporting.Reporter {
-    }
-    gherlint.reporting.Reporter -up-* gherlint.linter.GherkinLinter : reporter
-    gherlint.walker.ASTWalker -up-* gherlint.linter.GherkinLinter : walker
-    gherlint.reporting.Reporter --* gherlint.checkers.base_checker.BaseChecker : reporter
-    gherlint.walker.ASTWalker "1" *-- "n" gherlint.checkers.base_checker.BaseChecker: checkers
-    gherlint.checkers.base_checker.BaseChecker "1" *-- "n" gherlint.reporting.Message
+    class CheckerRegistry {}
+    class ASTWalker {}
+    class BaseChecker {}
+    class GherkinLinter {}
+    class Message {}
+    class MessageStore {}
+    class Reporter {}
+    Reporter -up-* GherkinLinter
+    ASTWalker -up-* GherkinLinter
+    Reporter --* BaseChecker
+    BaseChecker "1" *-- "n" Message
+    MessageStore "1" *-left- "n" Message
+    BaseChecker --> MessageStore : uses
+    Reporter --> MessageStore : uses
+    GherkinLinter *-- CheckerRegistry
+    CheckerRegistry "1" *-- "n" BaseChecker
 
 
 Startup Phase
