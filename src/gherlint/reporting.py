@@ -1,6 +1,7 @@
 import re
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict, Protocol
+from typing import Dict
 
 from gherlint.exceptions import DuplicateMessageError, UnknownMessageError
 from gherlint.objectmodel.nodes import Document, Node
@@ -61,14 +62,27 @@ class MessageStore:
             raise UnknownMessageError(f"Message name '{name}' not found.") from exc
 
 
-class Reporter(Protocol):
-    """This class defines the protocol which a concrete reporter class must adhere to."""
+class Reporter(ABC):
+    """Base class for reporters."""
 
-    def add_message(self, message: Message, node: Node) -> None:
-        """Add a message that shall be emitted"""
+    def add_message(self, id_or_name: str, node: Node) -> None:
+        """Add a message, identified by its id or name, that shall be emitted"""
+        if Message.id_pattern.match(id_or_name):
+            message = MessageStore.get_by_id(id_or_name)
+        elif Message.name_pattern.match(id_or_name):
+            message = MessageStore.get_by_name(id_or_name)
+        else:
+            raise ValueError(
+                f"{id_or_name} matches neither the pattern for a message ID nor a message name."
+            )
+        self.emit(message, node)
+
+    @abstractmethod
+    def emit(self, message: Message, node: Node) -> None:
+        """Emit the message as it is suitable for the desired report format"""
 
 
-class TextReporter:
+class TextReporter(Reporter):
     """Simple text based reporter that prints to stdout"""
 
     # example: missing_feature_name.feature:1:0: Feature has no name (missing-feature-name)
@@ -77,7 +91,7 @@ class TextReporter:
     def __init__(self):
         self.current_file = None
 
-    def add_message(self, message: Message, node: Node) -> None:
+    def emit(self, message: Message, node: Node) -> None:
         root = node.get_root()
         if not isinstance(root, Document):
             raise RuntimeError(

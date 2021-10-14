@@ -14,7 +14,7 @@ each checker implements :py:func:`visit_nodetype` and :py:func:`leave_nodetype` 
 The :py:class:`ASTWalker` calls those methods on the checkers that have implemented them for each node while
 it traverses the tree.
 The checkers themselves define one or several :py:class:`Message` which can be emitted through a class that
-implements the :py:class:`Reporter` protocol.
+inherits from :py:class:`Reporter` (or defines the necessary methods).
 
 .. uml::
     :caption: Static Representation

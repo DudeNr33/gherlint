@@ -1,5 +1,3 @@
-import pytest
-
 from gherlint.checkers.base_checker import BaseChecker
 from gherlint.reporting import Message, MessageStore
 
@@ -13,11 +11,6 @@ class MyChecker(BaseChecker):  # pylint: disable=too-few-public-methods
 
 
 class TestBaseChecker:
-    @staticmethod
-    @pytest.fixture(autouse=True)
-    def clear_msgstore():
-        MessageStore().clear()
-
     @staticmethod
     def test_base_class_registers_messages():
         checker = MyChecker(reporter=None)

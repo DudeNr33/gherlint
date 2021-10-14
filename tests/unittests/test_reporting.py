@@ -46,12 +46,6 @@ class TestMessage:
 class TestMessageStore:
     messagestore = MessageStore()
 
-    @pytest.fixture(autouse=True)
-    def clear_messagestore(self):
-        """Reset the message store before each test run"""
-        self.messagestore.id_to_message.clear()
-        self.messagestore.name_to_message.clear()
-
     def test_register_new_message_succeeds(self):
         msg = Message(id="C001", name="test-message", text="")
         self.messagestore.register_message(msg)
