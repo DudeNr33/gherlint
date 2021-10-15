@@ -7,6 +7,7 @@ from typing import Union
 
 from gherlint.checkers.base_checker import BaseChecker
 from gherlint.objectmodel import nodes
+from gherlint.registry import CheckerRegistry
 from gherlint.reporting import Message
 
 
@@ -33,3 +34,7 @@ class CompletenessChecker(BaseChecker):
     ) -> None:
         if not node.name.strip():
             self.reporter.add_message("missing-scenario-name", node)
+
+
+def register_checker(registry: CheckerRegistry) -> None:
+    registry.register(CompletenessChecker)

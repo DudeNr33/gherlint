@@ -1,11 +1,11 @@
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 
 from gherkin.parser import Parser
 
-from gherlint.checkers.completeness import CompletenessChecker
-from gherlint.checkers.statistics import Statistics
+from gherlint.checkers.base_checker import BaseChecker
 from gherlint.objectmodel.nodes import Document
+from gherlint.registry import CheckerRegistry
 from gherlint.reporting import TextReporter
 from gherlint.walker import ASTWalker
 
@@ -16,10 +16,12 @@ class GherkinLinter:
     def __init__(self, path: str) -> None:
         self.path = Path(path)
         self.reporter = TextReporter()
-        self.statistics = Statistics(self.reporter)
-        self.walker = ASTWalker(
-            checkers=[CompletenessChecker(self.reporter), self.statistics]
-        )
+        self.checker_registry = CheckerRegistry()
+        self.checker_registry.discover()
+        self.checkers: List[BaseChecker] = [
+            checker(self.reporter) for checker in self.checker_registry
+        ]
+        self.walker = ASTWalker(self.checkers)
         self.parser = Parser()
 
     def run(self) -> None:
@@ -29,7 +31,6 @@ class GherkinLinter:
         else:
             for filepath in self.path.rglob("*.feature"):
                 self.lint_file(filepath)
-        # self.statistics.print_summary()
 
     def lint_file(self, filepath: Union[str, Path]):
         data = self.parser.parse(str(filepath))
