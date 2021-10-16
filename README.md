@@ -21,7 +21,7 @@ to!
 
 The following work items are planned for the upcoming releases:
 
-* V0.1.x - V0.1.0:
+* V0.0.x - V0.1.0:
     * [x] Parser and object model for feature files
     * [x] Basic checkers to demonstrate workflow
     * [x] Basic text based reporter
