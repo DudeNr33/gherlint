@@ -15,7 +15,7 @@ classifiers = [
 ]
 
 [tool.poetry.scripts]
-gherlint = 'gherlint.__main__:main'
+gherlint = 'gherlint.__main__:cli'
 
 [tool.poetry.dependencies]
 python = "^3.8"

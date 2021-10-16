@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from gherkin.parser import Parser
 
-from gherlint.objectmodel import Document
+from gherlint.objectmodel.nodes import Document
 
 TESTDATA = (Path(__file__).parent.parent / "testdata").absolute()
 

@@ -1,14 +1,14 @@
-"""Not a real checker in the sense that it might complain about stuff.
-It will generate a statistic of the number of features, scenarios etc. instead."""
-
 from collections import Counter
 from typing import Tuple
 
-from gherlint.checkers.base_checker import BaseChecker
+from gherkin.parser import Parser
+
+from gherlint import utils
 from gherlint.objectmodel import nodes
+from gherlint.walker import ASTWalker
 
 
-class Statistics(BaseChecker):
+class Statistics:
     counter: Counter = Counter()
     elements: Tuple[str, ...] = ("Features", "Scenario Outlines", "Scenarios", "Steps")
 
@@ -33,3 +33,15 @@ class Statistics(BaseChecker):
                 f"| {element:<{max_element_length}} | {self.counter[element]:>{max_count_length}} |"
             )
         print("-" * (max_element_length + max_count_length + 7))
+
+
+def compute_metrics(path):
+    parser = Parser()
+    statistics = Statistics()
+    walker = ASTWalker(checkers=[statistics])
+    for file in utils.iter_feature_files(path):
+        data = parser.parse(str(file))
+        data["filename"] = str(file)
+        document = nodes.Document.from_dict(data)
+        walker.walk(document)
+    statistics.print_summary()

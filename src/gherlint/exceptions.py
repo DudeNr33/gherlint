@@ -8,3 +8,7 @@ class DuplicateMessageError(GherlintException):
 
 class UnknownMessageError(GherlintException):
     """Raised if an unknown message was requested from the MessageStore"""
+
+
+class UnsupportedFiletype(GherlintException):
+    """Raised if a file with unsupported extension should be processed."""

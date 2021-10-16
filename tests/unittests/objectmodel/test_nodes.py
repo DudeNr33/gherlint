@@ -2,8 +2,8 @@ from typing import List
 
 import pytest
 
-from gherlint.objectmodel import Document
 from gherlint.objectmodel.nodes import (
+    Document,
     Examples,
     Feature,
     Node,
