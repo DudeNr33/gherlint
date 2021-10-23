@@ -2,6 +2,10 @@ Feature: Test feature
 
     This feature is used for basic functional tests of gherlint
 
+    Background: Test Background
+
+        Given a precondition relevant for all tests
+
     Scenario: Test scenario
 
         Given the precondition is met

@@ -3,6 +3,7 @@ from typing import List
 import pytest
 
 from gherlint.objectmodel.nodes import (
+    Background,
     Document,
     Examples,
     Feature,
@@ -106,6 +107,41 @@ class TestFeature:
         assert len(feature.children) == 2
         assert isinstance(feature.children[0], Scenario)
         assert isinstance(feature.children[1], ScenarioOutline)
+
+
+class TestBackground:
+    @staticmethod
+    @pytest.fixture
+    def background_data():
+        return {
+            "id": "1",
+            "location": {"line": 5, "column": 5},
+            "keyword": "Background",
+            "name": "Test Background",
+            "description": "",
+            "steps": [],
+        }
+
+    @staticmethod
+    def test_empty_background(background_data):
+        background = Background.from_dict(background_data, parent=None)
+        assert isinstance(background, Background)
+        assert len(background.children) == 0
+
+    @staticmethod
+    def test_steps_are_instantiated(background_data):
+        steps = [
+            {
+                "id": "0",
+                "location": {"line": 7, "column": 9},
+                "keyword": "Given ",
+                "text": "a precondition relevant for all tests",
+            }
+        ]
+        background_data["steps"] = steps
+        background = Background.from_dict(background_data, parent=None)
+        assert len(background.children) == 1
+        assert all(isinstance(child, Step) for child in background.children)
 
 
 class TestScenario:

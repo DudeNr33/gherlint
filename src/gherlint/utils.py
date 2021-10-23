@@ -1,5 +1,7 @@
 from pathlib import Path
-from typing import Iterator, Union
+from typing import Iterator, List, Union
+
+from gherkin.dialect import DIALECTS
 
 from gherlint.exceptions import UnsupportedFiletype
 
@@ -14,3 +16,11 @@ def iter_feature_files(path: Union[str, Path]) -> Iterator[Path]:
             raise UnsupportedFiletype(f"{path} is not a .feature file.")
     else:
         yield from path.rglob("*.feature")
+
+
+def get_keyword_candidates(keyword: str) -> List[str]:
+    """Get a list of the possible words of the keyword in all languages."""
+    candidates = []
+    for language in DIALECTS.values():
+        candidates.extend(language[keyword])
+    return candidates

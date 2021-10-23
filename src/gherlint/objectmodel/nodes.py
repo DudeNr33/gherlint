@@ -4,7 +4,9 @@ Nodes representing different elements of a Gherkin feature file.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
+
+from gherlint import utils
 
 
 class Node(ABC):
@@ -81,7 +83,7 @@ class Feature(Node):
         language: str,
         name: str,
         description: str,
-        children: List[Scenario],
+        children: List[Union[Background, Scenario, ScenarioOutline]],
     ):
         super().__init__(parent, line, column)
         self.tags = tags
@@ -102,12 +104,54 @@ class Feature(Node):
             description=data["description"],
             children=[],
         )
-        instance.children = [
-            Scenario.from_dict(d["scenario"], parent=instance)
-            if d["scenario"]["keyword"] == "Scenario"
-            else ScenarioOutline.from_dict(d["scenario"], parent=instance)
-            for d in data["children"]
-        ]
+        for child in data["children"]:
+            for keyword, child_data in child.items():
+                if keyword == "scenario":
+                    if child_data["keyword"] in utils.get_keyword_candidates(
+                        "scenario"
+                    ):
+                        instance.children.append(
+                            Scenario.from_dict(child_data, parent=instance)
+                        )
+                    else:
+                        instance.children.append(
+                            ScenarioOutline.from_dict(child_data, parent=instance)
+                        )
+                elif keyword == "background":
+                    instance.children.append(
+                        Background.from_dict(child_data, parent=instance)
+                    )
+        return instance
+
+
+class Background(Node):
+    """Represents a background of a feature."""
+
+    def __init__(
+        self,
+        line: int,
+        column: int,
+        parent: Optional[Node],
+        name: str,
+        description: str,
+        children: List[Step],
+    ):
+        super().__init__(parent, line, column)
+        self.name = name
+        self.description = description
+        self.children = children
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Background:
+        instance = cls(
+            line=data["location"]["line"],
+            column=data["location"]["column"],
+            parent=parent,
+            name=data["name"],
+            description=data["description"],
+            children=[],
+        )
+        instance.children = [Step.from_dict(s, parent=instance) for s in data["steps"]]
         return instance
 
 

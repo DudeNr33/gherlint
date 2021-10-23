@@ -8,7 +8,9 @@ from gherlint.objectmodel.nodes import Document
 TESTDATA = (Path(__file__).parent.parent / "testdata").absolute()
 
 
-@pytest.mark.parametrize("file", ["empty_file.feature", "test.feature"])
+@pytest.mark.parametrize(
+    "file", ["empty_file.feature", "test.feature", "german.feature"]
+)
 def test_parse_feature(file):
     filepath = str(TESTDATA / file)
     data = Parser().parse(filepath)
