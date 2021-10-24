@@ -177,6 +177,7 @@ class Scenario(Node):
         self.description = description
         self.examples = examples
         self.children = children
+        self.parameters = extract_parameters(name)
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Scenario:

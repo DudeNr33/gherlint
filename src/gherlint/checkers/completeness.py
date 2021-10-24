@@ -6,6 +6,7 @@ every parameter that is used in a scenario outline has to be defined in the exam
 from typing import Union
 
 from gherlint.checkers.base_checker import BaseChecker
+from gherlint.exceptions import InternalError
 from gherlint.objectmodel import nodes
 from gherlint.registry import CheckerRegistry
 from gherlint.reporting import Message
@@ -17,6 +18,11 @@ class CompletenessChecker(BaseChecker):
     MESSAGES = [
         Message("W001", "missing-feature-name", "Feature has no name"),
         Message("W002", "missing-scenario-name", "Scenario has no name"),
+        Message(
+            "E001",
+            "missing-parameter",
+            "At least one of the used parameters is not defined in the Examples section",
+        ),
     ]
 
     def visit_feature(self, node: nodes.Feature) -> None:
@@ -28,12 +34,33 @@ class CompletenessChecker(BaseChecker):
 
     def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
         self._check_missing_scenario_name(node)
+        self._check_missing_parameter(node)
+
+    def visit_step(self, node: nodes.Step) -> None:
+        self._check_missing_parameter(node)
 
     def _check_missing_scenario_name(
         self, node: Union[nodes.Scenario, nodes.ScenarioOutline]
     ) -> None:
         if not node.name.strip():
             self.reporter.add_message("missing-scenario-name", node)
+
+    def _check_missing_parameter(
+        self, node: Union[nodes.ScenarioOutline, nodes.Step]
+    ) -> None:
+        if not node.parameters:
+            return
+        if isinstance(node, nodes.Step):
+            if not isinstance(node.parent, nodes.ScenarioOutline):
+                raise InternalError()
+            outline = node.parent
+        else:
+            outline = node
+        found = False
+        for examples in outline.examples:
+            found = all(param in examples.parameters for param in node.parameters)
+        if not found:
+            self.reporter.add_message("missing-parameter", node)
 
 
 def register_checker(registry: CheckerRegistry) -> None:

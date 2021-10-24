@@ -192,6 +192,12 @@ class TestScenario:
         assert len(scenario.children) == 3
         assert all(isinstance(child, Step) for child in scenario.children)
 
+    @staticmethod
+    def test_parameter_extraction(scenario_data):
+        scenario_data["name"] = "Scenario with <one> parameter"
+        scenario = Scenario.from_dict(scenario_data, parent=None)
+        assert scenario.parameters == ("one",)
+
 
 class TestExamples:
     @staticmethod

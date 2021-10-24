@@ -8,8 +8,15 @@ feature_files = list(Path(__file__).parent.rglob("*.feature"))
 result_files = [file.parent / (file.stem + ".txt") for file in feature_files]
 
 
+def idfn(val):
+    """Generates names for the parametrized tests."""
+    if str(val).endswith(".txt"):
+        return val.stem
+    return ""
+
+
 @pytest.mark.parametrize(
-    "feature_file, expected_output", list(zip(feature_files, result_files))
+    "feature_file, expected_output", list(zip(feature_files, result_files)), ids=idfn
 )
 def test_expected_outcome(feature_file: Path, expected_output: Path, capsys) -> None:
     linter = GherkinLinter(str(feature_file))
