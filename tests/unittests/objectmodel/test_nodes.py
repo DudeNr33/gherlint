@@ -240,6 +240,64 @@ class TestExamples:
         assert examples.values == {"x": ["1", "a"], "y": ["2", "b"]}
 
 
+class TestStep:
+    @staticmethod
+    @pytest.fixture
+    def example_step():
+        return {
+            "id": "0",
+            "keyword": "Given ",
+            "location": {"column": 9, "line": 7},
+            "text": "the precondition is met",
+        }
+
+    @staticmethod
+    def test_simple_given_step(example_step):
+        step = Step.from_dict(example_step, parent=None)
+        assert isinstance(step, Step)
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        "used_keyword, expected_type",
+        [
+            ("Given ", "given"),
+            ("given ", "given"),  # test once that lookup works case insensitive
+            ("Angenommen ", "given"),
+            ("angenommen ", "given"),
+            ("When ", "when"),
+            ("Wenn ", "when"),
+            ("Then ", "then"),
+            ("Dann ", "then"),
+            ("But ", "but"),
+            ("Aber ", "but"),
+            ("And ", "and"),
+            ("Und ", "and"),
+        ],
+    )
+    def test_keyword_is_recognized_independent_of_language(
+        example_step, used_keyword, expected_type
+    ):
+        example_step["keyword"] = used_keyword
+        step = Step.from_dict(example_step, parent=None)
+        assert step.type == expected_type
+
+    @staticmethod
+    @pytest.mark.parametrize(
+        "step_text, parameters",
+        [
+            ("a single <parameter> occurs", ["parameter"]),
+            ("a <first> parameter followed by a <second>", ["first", "second"]),
+            ("two <consecutive> <parameters> occur", ["consecutive", "parameters"]),
+        ],
+    )
+    def test_step_with_example_usage(example_step, step_text, parameters):
+        parametrized_step = example_step
+        parametrized_step["text"] = step_text
+        step = Step.from_dict(parametrized_step, parent=None)
+        assert all(param in step.parameters for param in parameters)
+        assert len(parameters) == len(step.parameters)
+
+
 class TestMisc:
     @staticmethod
     def test_get_root():

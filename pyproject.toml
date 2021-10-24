@@ -21,6 +21,7 @@ gherlint = 'gherlint.__main__:cli'
 python = "^3.8"
 gherkin-official = "^22.0.0"
 click = "^8.0.1"
+parse = "^1.19.0"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.11.1"

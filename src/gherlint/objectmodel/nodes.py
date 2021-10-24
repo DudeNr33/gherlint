@@ -4,7 +4,9 @@ Nodes representing different elements of a Gherkin feature file.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import parse
 
 from gherlint import utils
 
@@ -204,8 +206,22 @@ class Step(Node):
         self, parent: Optional[Node], line: int, column: int, keyword: str, text: str
     ):
         super().__init__(parent, line, column)
-        self.keyword = keyword
+        self.type = self._get_english_keyword(keyword)
         self.text = text
+        self.parameters = extract_parameters(text)
+
+    @staticmethod
+    def _get_english_keyword(keyword: str) -> str:
+        """Get the corresponding english step keyword in lowercase from input in any (supported) language."""
+        if keyword.strip() == "*":
+            return "*"
+        english_keywords = ("given", "when", "then", "and", "but")
+        for english_keyword in english_keywords:
+            if keyword.lower() in [
+                kw.lower() for kw in utils.get_keyword_candidates(english_keyword)
+            ]:
+                return english_keyword
+        raise ValueError(f"Unable to look up english step keyword for {keyword}")
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Step:
@@ -254,3 +270,11 @@ class Examples(Node):
             parameters=parameters,
             values=values,
         )
+
+
+def extract_parameters(text: str) -> Tuple[str]:
+    """Extract parameters from a string (e. g. a step text).
+    'Parameters' are placeholders defined in the Examples section of a
+    Scenario Outline and are delimited with ``< >``."""
+    pattern = "<{}>"
+    return tuple(match.fixed[0] for match in parse.findall(pattern, text))  # type: ignore
