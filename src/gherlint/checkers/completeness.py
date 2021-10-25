@@ -25,6 +25,7 @@ class CompletenessChecker(BaseChecker):
         ),
         Message("W003", "file-has-no-feature", "No Feature given in file"),
         Message("W004", "empty-feature", "Feature has no scenarios"),
+        Message("W005", "empty-scenario", "Scenario does not contain any steps"),
     ]
 
     def visit_document(self, node: nodes.Document) -> None:
@@ -37,21 +38,21 @@ class CompletenessChecker(BaseChecker):
         if not node.children:
             self.reporter.add_message("empty-feature", node)
 
-    def visit_scenario(self, node: nodes.Scenario) -> None:
-        self._check_missing_scenario_name(node)
-
-    def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
-        self._check_missing_scenario_name(node)
-        self._check_missing_parameter(node)
-
-    def visit_step(self, node: nodes.Step) -> None:
-        self._check_missing_parameter(node)
-
-    def _check_missing_scenario_name(
+    def visit_scenario(
         self, node: Union[nodes.Scenario, nodes.ScenarioOutline]
     ) -> None:
         if not node.name.strip():
             self.reporter.add_message("missing-scenario-name", node)
+        if not node.children:
+            self.reporter.add_message("empty-scenario", node)
+
+    def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
+        # all checks relevant to normal scenarios apply for outlines as well
+        self.visit_scenario(node)
+        self._check_missing_parameter(node)
+
+    def visit_step(self, node: nodes.Step) -> None:
+        self._check_missing_parameter(node)
 
     def _check_missing_parameter(
         self, node: Union[nodes.ScenarioOutline, nodes.Step]

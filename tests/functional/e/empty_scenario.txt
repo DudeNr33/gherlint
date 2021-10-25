@@ -1,0 +1,4 @@
+************* empty_scenario.feature
+empty_scenario.feature:8:5: Scenario does not contain any steps (empty-scenario)
+empty_scenario.feature:10:5: Scenario does not contain any steps (empty-scenario)
+empty_scenario.feature:12:5: Scenario does not contain any steps (empty-scenario)
