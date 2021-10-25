@@ -1,0 +1,6 @@
+************* missing_step_type.feature
+missing_step_type.feature:5:5: Scenario does not contain any Given step (missing-given-step)
+missing_step_type.feature:9:5: Scenario does not contain any When step (missing-when-step)
+missing_step_type.feature:13:5: Scenario does not contain any Then step (missing-then-step)
+missing_step_type.feature:17:5: Scenario does not contain any Given step (missing-given-step)
+missing_step_type.feature:17:5: Scenario does not contain any When step (missing-when-step)

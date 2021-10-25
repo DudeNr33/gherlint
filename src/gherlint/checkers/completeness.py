@@ -26,6 +26,11 @@ class CompletenessChecker(BaseChecker):
         Message("W003", "file-has-no-feature", "No Feature given in file"),
         Message("W004", "empty-feature", "Feature has no scenarios"),
         Message("W005", "empty-scenario", "Scenario does not contain any steps"),
+        Message(
+            "C001", "missing-given-step", "Scenario does not contain any Given step"
+        ),
+        Message("C002", "missing-when-step", "Scenario does not contain any When step"),
+        Message("C003", "missing-then-step", "Scenario does not contain any Then step"),
     ]
 
     def visit_document(self, node: nodes.Document) -> None:
@@ -45,6 +50,7 @@ class CompletenessChecker(BaseChecker):
             self.reporter.add_message("missing-scenario-name", node)
         if not node.children:
             self.reporter.add_message("empty-scenario", node)
+        self._check_missing_step_type(node)
 
     def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
         # all checks relevant to normal scenarios apply for outlines as well
@@ -70,6 +76,18 @@ class CompletenessChecker(BaseChecker):
             found = all(param in examples.parameters for param in node.parameters)
         if not found:
             self.reporter.add_message("missing-parameter", node)
+
+    def _check_missing_step_type(
+        self, node: Union[nodes.Scenario, nodes.ScenarioOutline]
+    ):
+        if not node.children:
+            # We have an own message for this, don't need to clutter the output with
+            # redundant information
+            return
+        required_step_types = ("given", "when", "then")
+        for step_type in required_step_types:
+            if not any(step.type == step_type for step in node.children):
+                self.reporter.add_message(f"missing-{step_type}-step", node)
 
 
 def register_checker(registry: CheckerRegistry) -> None:
