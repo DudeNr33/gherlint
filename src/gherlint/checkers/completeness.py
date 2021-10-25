@@ -23,7 +23,12 @@ class CompletenessChecker(BaseChecker):
             "missing-parameter",
             "At least one of the used parameters is not defined in the Examples section",
         ),
+        Message("W003", "file-has-no-feature", "No Feature given in file"),
     ]
+
+    def visit_document(self, node: nodes.Document) -> None:
+        if not node.feature:
+            self.reporter.add_message("file-has-no-feature", node)
 
     def visit_feature(self, node: nodes.Feature) -> None:
         if not node.name.strip():

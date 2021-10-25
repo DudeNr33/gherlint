@@ -1,0 +1,2 @@
+************* file_has_no_feature.feature
+file_has_no_feature.feature:0:0: No Feature given in file (file-has-no-feature)
