@@ -58,7 +58,8 @@ class CompletenessChecker(BaseChecker):
         self._check_missing_parameter(node)
 
     def visit_step(self, node: nodes.Step) -> None:
-        self._check_missing_parameter(node)
+        if isinstance(node.parent, nodes.ScenarioOutline):
+            self._check_missing_parameter(node)
 
     def _check_missing_parameter(
         self, node: Union[nodes.ScenarioOutline, nodes.Step]
@@ -67,7 +68,7 @@ class CompletenessChecker(BaseChecker):
             return
         if isinstance(node, nodes.Step):
             if not isinstance(node.parent, nodes.ScenarioOutline):
-                raise InternalError()
+                raise InternalError(node)
             outline = node.parent
         else:
             outline = node

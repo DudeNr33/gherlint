@@ -1,11 +1,5 @@
 # CHANGELOG
 
-## V0.1.0
-First package in alpha status:
-* Parser and object model for feature files
-* Basic checkers to demonstrate workflow
-* Basic text based reporter
-
 
 ## V0.2.0
 New checks:
@@ -21,3 +15,9 @@ Other changes:
 * Support for ``Background``
 * Determination of step type independent of language
 * Distinction between ``Scenario`` and ``Scenario Outline`` independent of language
+
+## V0.1.0
+First package in alpha status:
+* Parser and object model for feature files
+* Basic checkers to demonstrate workflow
+* Basic text based reporter
