@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gherlint"
-version = "0.2.0"
+version = "0.3.0"
 description = "Linter for Gherkin feature files"
 authors = ["Andreas Finkler"]
 license = "MIT license"
