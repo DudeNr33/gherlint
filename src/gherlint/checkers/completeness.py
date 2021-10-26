@@ -19,7 +19,7 @@ class CompletenessChecker(BaseChecker):
         Message("W001", "missing-feature-name", "Feature has no name"),
         Message("W002", "missing-scenario-name", "Scenario has no name"),
         Message(
-            "E003",
+            "E004",
             "missing-parameter",
             "At least one of the used parameters is not defined in the Examples section",
         ),

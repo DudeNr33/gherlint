@@ -1,0 +1,2 @@
+************* missing_language.feature
+missing_language.feature:0:0: A feature file which uses an other language than English should declare this with a '# language: <lang>' tag at the beginning of the file. (missing-language-tag)
