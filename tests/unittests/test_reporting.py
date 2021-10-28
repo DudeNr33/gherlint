@@ -8,9 +8,9 @@ from gherlint.reporting import Message, MessageStore
 
 
 class TestMessage:
-    ALLOWED_STARTCHARACTERS = ["E", "C", "W", "I"]
+    ALLOWED_STARTCHARACTERS = ["E", "C", "W", "R"]
     WRONG_STARTCHARACTERS = [
-        c for c in string.ascii_letters if c not in ["E", "C", "W", "I"]
+        c for c in string.ascii_letters if c not in ["E", "C", "W", "R"]
     ]
 
     @staticmethod
@@ -20,7 +20,7 @@ class TestMessage:
             ("C001", "foo", "bar"),
             ("E999", "foo-bar-baz", "This is a longer text"),
             ("C123", "foo", ""),
-            ("I000", "foo", ""),
+            ("R000", "foo", ""),
         ],
     )
     def test_create_valid_message_succeeds(msg_id, name, text):
