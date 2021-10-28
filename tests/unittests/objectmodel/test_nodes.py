@@ -126,7 +126,7 @@ class TestBackground:
     def test_empty_background(background_data):
         background = Background.from_dict(background_data, parent=None)
         assert isinstance(background, Background)
-        assert len(background.children) == 0
+        assert len(background.steps) == 0
 
     @staticmethod
     def test_steps_are_instantiated(background_data):
@@ -140,8 +140,8 @@ class TestBackground:
         ]
         background_data["steps"] = steps
         background = Background.from_dict(background_data, parent=None)
-        assert len(background.children) == 1
-        assert all(isinstance(child, Step) for child in background.children)
+        assert len(background.steps) == 1
+        assert all(isinstance(child, Step) for child in background.steps)
 
 
 class TestScenario:
