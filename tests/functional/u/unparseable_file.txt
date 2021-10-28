@@ -1,2 +1,4 @@
 ************* unparseable_file.feature
-unparseable_file.feature:0:0: File could not be parsed (unparseable-file)
+unparseable_file.feature:1:1: File could not be parsed: expected: #EOF, #Language, #TagLine, #FeatureLine, #Comment, #Empty (unparseable-file)
+unparseable_file.feature:8:1: File could not be parsed: expected: #EOF, #TableRow, #DocStringSeparator, #StepLine, #TagLine, #ExamplesLine, #ScenarioLine, #RuleLine, #Comment, #Empty (unparseable-file)
+unparseable_file.feature:9:1: File could not be parsed: expected: #EOF, #TableRow, #DocStringSeparator, #StepLine, #TagLine, #ExamplesLine, #ScenarioLine, #RuleLine, #Comment, #Empty (unparseable-file)

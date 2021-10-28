@@ -6,7 +6,7 @@ from gherkin.dialect import DIALECTS
 from gherkin.parser import CompositeParserException, Parser
 
 from gherlint.checkers.base_checker import BaseChecker
-from gherlint.objectmodel.nodes import Document
+from gherlint.objectmodel.nodes import Document, Node
 from gherlint.registry import CheckerRegistry
 from gherlint.reporting import Message, TextReporter
 from gherlint.walker import ASTWalker
@@ -16,7 +16,7 @@ class GherkinLinter(BaseChecker):
     """Main linter class which orchestrates the linting process."""
 
     MESSAGES = [
-        Message("E001", "unparseable-file", "File could not be parsed"),
+        Message("E001", "unparseable-file", "File could not be parsed: {error_msg}"),
         Message(
             "E002",
             "missing-language-tag",
@@ -58,13 +58,11 @@ class GherkinLinter(BaseChecker):
             content = self._check_and_fix_language(language, content, str(filepath))
         try:
             data = self.parser.parse(content)
-        except CompositeParserException:
-            self.reporter.add_message(
-                "unparseable-file",
-                Document(
-                    line=0, column=0, filename=str(filepath), feature=None, comments=[]
-                ),
+        except CompositeParserException as exc:
+            document = Document(
+                line=0, column=0, filename=str(filepath), feature=None, comments=[]
             )
+            self._handle_parser_error(exc, document)
         else:
             data["filename"] = str(filepath)
             document = Document.from_dict(data)
@@ -100,3 +98,15 @@ class GherkinLinter(BaseChecker):
             )
             return content.replace(f"# language: {match[0]}", f"# language: {language}")
         return content
+
+    def _handle_parser_error(self, exc: CompositeParserException, node: Node) -> None:
+        offending_lines = str(exc).splitlines()[1:]
+        for offending_line in offending_lines:
+            node.line, node.column, error_msg = parse.search(
+                "({:d}:{:d}): {}, got", offending_line
+            )
+            self.reporter.add_message(
+                "unparseable-file",
+                node,
+                error_msg=error_msg,
+            )
