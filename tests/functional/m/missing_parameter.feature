@@ -13,6 +13,7 @@ Feature: Functional test for missing parameters
     Scenario Outline: Incorrect and missing <y>
         Given the light switch is <state>
         When I open my eyes
+        And I use <name>, <on_off> and <visual> so I don't trigger unused-parameter
         Then I will see <whatever>
 
         Examples:

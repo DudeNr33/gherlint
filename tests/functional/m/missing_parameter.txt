@@ -1,4 +1,4 @@
 ************* missing_parameter.feature
-missing_parameter.feature:13:5: At least one of the used parameters is not defined in the Examples section (missing-parameter)
-missing_parameter.feature:14:9: At least one of the used parameters is not defined in the Examples section (missing-parameter)
-missing_parameter.feature:16:9: At least one of the used parameters is not defined in the Examples section (missing-parameter)
+missing_parameter.feature:13:5: 'y' is not defined in the Examples section (missing-parameter)
+missing_parameter.feature:14:9: 'state' is not defined in the Examples section (missing-parameter)
+missing_parameter.feature:17:9: 'whatever' is not defined in the Examples section (missing-parameter)

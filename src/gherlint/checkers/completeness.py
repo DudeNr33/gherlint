@@ -21,7 +21,7 @@ class CompletenessChecker(BaseChecker):
         Message(
             "E004",
             "missing-parameter",
-            "At least one of the used parameters is not defined in the Examples section",
+            "'{parameter}' is not defined in the Examples section",
         ),
         Message("W003", "file-has-no-feature", "No Feature given in file"),
         Message("W004", "empty-feature", "Feature has no scenarios"),
@@ -87,11 +87,15 @@ class CompletenessChecker(BaseChecker):
             outline = node.parent
         else:
             outline = node
-        found = False
-        for examples in outline.examples:
-            found = all(param in examples.parameters for param in node.parameters)
-        if not found:
-            self.reporter.add_message("missing-parameter", node)
+        for param in node.parameters:
+            if not any(param in examples.parameters for examples in outline.examples):
+                self.reporter.add_message("missing-parameter", node, parameter=param)
+
+        # found = False
+        # for examples in outline.examples:
+        #     found = all(param in examples.parameters for param in node.parameters)
+        # if not found:
+        #     self.reporter.add_message("missing-parameter", node)
 
     def _check_missing_step_type(
         self, node: Union[nodes.Scenario, nodes.ScenarioOutline]
