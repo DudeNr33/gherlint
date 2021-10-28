@@ -169,15 +169,19 @@ class Scenario(Node):
         name: str,
         description: str,
         examples: List[Examples],
-        children: List[Step],
+        steps: List[Step],
     ):
         super().__init__(parent, line, column)
         self.tags = tags
         self.name = name
         self.description = description
         self.examples = examples
-        self.children = children
+        self.steps = steps
         self.parameters = extract_parameters(name)
+
+    @property
+    def children(self):
+        return self.steps + self.examples
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Scenario:
@@ -189,12 +193,12 @@ class Scenario(Node):
             name=data["name"],
             description=data["description"],
             examples=[],
-            children=[],
+            steps=[],
         )
         instance.examples = [
             Examples.from_dict(d, parent=instance) for d in data["examples"]
         ]
-        instance.children = [Step.from_dict(s, parent=instance) for s in data["steps"]]
+        instance.steps = [Step.from_dict(s, parent=instance) for s in data["steps"]]
         return instance
 
 

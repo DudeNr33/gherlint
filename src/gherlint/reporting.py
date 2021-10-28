@@ -13,7 +13,7 @@ class Message:
     name: str  # unique short name, like missing-feature-name
     text: str  # More detailed textual description of the problem and optionally a hint how to solve the problem.
 
-    id_pattern = re.compile(r"^[EWCI]\d{3}$")
+    id_pattern = re.compile(r"^[EWCR]\d{3}$")
     name_pattern = re.compile(r"^[a-zA-Z]+(-[a-zA-Z]+)*$")
 
     def __post_init__(self):
@@ -65,7 +65,7 @@ class MessageStore:
 class Reporter(ABC):
     """Base class for reporters."""
 
-    def add_message(self, id_or_name: str, node: Node) -> None:
+    def add_message(self, id_or_name: str, node: Node, **format_args) -> None:
         """Add a message, identified by its id or name, that shall be emitted"""
         if Message.id_pattern.match(id_or_name):
             message = MessageStore.get_by_id(id_or_name)
@@ -75,10 +75,10 @@ class Reporter(ABC):
             raise ValueError(
                 f"{id_or_name} matches neither the pattern for a message ID nor a message name."
             )
-        self.emit(message, node)
+        self.emit(message, node, **format_args)
 
     @abstractmethod
-    def emit(self, message: Message, node: Node) -> None:
+    def emit(self, message: Message, node: Node, **format_args) -> None:
         """Emit the message as it is suitable for the desired report format"""
 
 
@@ -91,7 +91,7 @@ class TextReporter(Reporter):
     def __init__(self):
         self.current_file = None
 
-    def emit(self, message: Message, node: Node) -> None:
+    def emit(self, message: Message, node: Node, **format_args) -> None:
         root = node.get_root()
         if not isinstance(root, Document):
             raise RuntimeError(
@@ -102,12 +102,13 @@ class TextReporter(Reporter):
         if file != self.current_file:
             self.current_file = file
             self.new_section_for_file()
+        msg_text = message.text.format(**format_args) if format_args else message.text
         print(
             self.MSG_TEMPLATE.format(
                 file=file,
                 line=node.line,
                 column=node.column,
-                text=message.text,
+                text=msg_text,
                 name=message.name,
             )
         )

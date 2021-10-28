@@ -3,13 +3,13 @@ Checker focussing of completeness of feature files, e. g. that every scenario mu
 every parameter that is used in a scenario outline has to be defined in the examples, etc.
 """
 
-from typing import Union
+from typing import Set, Union
 
 from gherlint.checkers.base_checker import BaseChecker
 from gherlint.exceptions import InternalError
 from gherlint.objectmodel import nodes
 from gherlint.registry import CheckerRegistry
-from gherlint.reporting import Message
+from gherlint.reporting import Message, Reporter
 
 
 class CompletenessChecker(BaseChecker):
@@ -31,7 +31,12 @@ class CompletenessChecker(BaseChecker):
         ),
         Message("C002", "missing-when-step", "Scenario does not contain any When step"),
         Message("C003", "missing-then-step", "Scenario does not contain any Then step"),
+        Message("R001", "unused-parameter", "Parameter '{parameter}' is not used"),
     ]
+
+    def __init__(self, reporter: Reporter) -> None:
+        super().__init__(reporter)
+        self.used_parameters: Set[str] = set()
 
     def visit_document(self, node: nodes.Document) -> None:
         if not node.feature:
@@ -55,10 +60,20 @@ class CompletenessChecker(BaseChecker):
     def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
         # all checks relevant to normal scenarios apply for outlines as well
         self.visit_scenario(node)
+        for param in node.parameters:
+            self.used_parameters.add(param)
         self._check_missing_parameter(node)
+
+    def leave_scenariooutline(self, _: nodes.ScenarioOutline) -> None:
+        self.used_parameters.clear()
+
+    def visit_examples(self, node: nodes.Examples) -> None:
+        self._check_unused_parameter(node)
 
     def visit_step(self, node: nodes.Step) -> None:
         if isinstance(node.parent, nodes.ScenarioOutline):
+            for param in node.parameters:
+                self.used_parameters.add(param)
             self._check_missing_parameter(node)
 
     def _check_missing_parameter(
@@ -89,6 +104,11 @@ class CompletenessChecker(BaseChecker):
         for step_type in required_step_types:
             if not any(step.type == step_type for step in node.children):
                 self.reporter.add_message(f"missing-{step_type}-step", node)
+
+    def _check_unused_parameter(self, node: nodes.Examples) -> None:
+        for param in node.parameters:
+            if param not in self.used_parameters:
+                self.reporter.add_message("unused-parameter", node, parameter=param)
 
 
 def register_checker(registry: CheckerRegistry) -> None:

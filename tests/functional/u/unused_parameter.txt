@@ -1,0 +1,2 @@
+************* unused_parameter.feature
+unused_parameter.feature:8:9: Parameter 'z' is not used (unused-parameter)
