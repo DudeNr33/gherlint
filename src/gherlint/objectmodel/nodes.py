@@ -136,12 +136,16 @@ class Background(Node):
         parent: Optional[Node],
         name: str,
         description: str,
-        children: List[Step],
+        steps: List[Step],
     ):
         super().__init__(parent, line, column)
         self.name = name
         self.description = description
-        self.children = children
+        self.steps = steps
+
+    @property
+    def children(self):
+        return self.steps
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Background:
@@ -151,9 +155,9 @@ class Background(Node):
             parent=parent,
             name=data["name"],
             description=data["description"],
-            children=[],
+            steps=[],
         )
-        instance.children = [Step.from_dict(s, parent=instance) for s in data["steps"]]
+        instance.steps = [Step.from_dict(s, parent=instance) for s in data["steps"]]
         return instance
 
 

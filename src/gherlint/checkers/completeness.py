@@ -26,6 +26,7 @@ class CompletenessChecker(BaseChecker):
         Message("W003", "file-has-no-feature", "No Feature given in file"),
         Message("W004", "empty-feature", "Feature has no scenarios"),
         Message("W005", "empty-scenario", "Scenario does not contain any steps"),
+        Message("W006", "empty-background", "Background does not contain any steps"),
         Message(
             "C001", "missing-given-step", "Scenario does not contain any Given step"
         ),
@@ -47,6 +48,10 @@ class CompletenessChecker(BaseChecker):
             self.reporter.add_message("missing-feature-name", node)
         if not node.children:
             self.reporter.add_message("empty-feature", node)
+
+    def visit_background(self, node: nodes.Background) -> None:
+        if not node.steps:
+            self.reporter.add_message("empty-background", node)
 
     def visit_scenario(
         self, node: Union[nodes.Scenario, nodes.ScenarioOutline]
@@ -90,12 +95,6 @@ class CompletenessChecker(BaseChecker):
         for param in node.parameters:
             if not any(param in examples.parameters for examples in outline.examples):
                 self.reporter.add_message("missing-parameter", node, parameter=param)
-
-        # found = False
-        # for examples in outline.examples:
-        #     found = all(param in examples.parameters for param in node.parameters)
-        # if not found:
-        #     self.reporter.add_message("missing-parameter", node)
 
     def _check_missing_step_type(
         self, node: Union[nodes.Scenario, nodes.ScenarioOutline]
