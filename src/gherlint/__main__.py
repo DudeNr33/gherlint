@@ -1,6 +1,8 @@
 """
 ``gherlint`` is a linter for Cucumber Gherkin feature files.
 """
+from pathlib import Path
+
 import click
 
 from gherlint.linter import GherkinLinter
@@ -19,15 +21,17 @@ def cli(ctx: click.Context) -> None:
 
 
 @cli.command()
-def lint() -> None:
+@click.argument("path")
+def lint(path: str) -> None:
     """Perform linting of feature files"""
-    GherkinLinter(".").run()
+    GherkinLinter(Path(path)).run()
 
 
 @cli.command()
-def stats() -> None:
+@click.argument("path")
+def stats(path: str) -> None:
     """Compute metrics over your feature files"""
-    compute_metrics(".")
+    compute_metrics(Path(path))
 
 
 if __name__ == "__main__":

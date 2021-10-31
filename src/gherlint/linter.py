@@ -32,9 +32,9 @@ class GherkinLinter(BaseChecker):
         ),
     ]
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: Path) -> None:
         super().__init__(reporter=TextReporter())
-        self.path = Path(path)
+        self.path = path
         self.checker_registry = CheckerRegistry()
         self.checker_registry.discover()
         self.checkers: List[BaseChecker] = [
