@@ -6,7 +6,7 @@ from gherkin.dialect import DIALECTS
 from gherkin.parser import CompositeParserException, Parser
 
 from gherlint.checkers.base_checker import BaseChecker
-from gherlint.objectmodel.nodes import Document, Node
+from gherlint.objectmodel.nodes import Document
 from gherlint.registry import CheckerRegistry
 from gherlint.reporting import Message, TextReporter
 from gherlint.walker import ASTWalker
@@ -51,25 +51,29 @@ class GherkinLinter(BaseChecker):
             for filepath in self.path.rglob("*.feature"):
                 self.lint_file(filepath)
 
-    def lint_file(self, filepath: Path):
-        content = filepath.read_text("utf8")
-        language = self.detect_language(content)
-        if language not in ("en", "unknown"):
-            content = self._check_and_fix_language(language, content, str(filepath))
+    def lint_file(self, filepath: Path) -> None:
         try:
-            data = self.parser.parse(content)
+            document = self._parse(filepath)
         except CompositeParserException as exc:
-            document = Document(
-                line=0, column=0, filename=str(filepath), feature=None, comments=[]
-            )
-            self._handle_parser_error(exc, document)
+            self._handle_parser_error(exc, filepath)
         else:
-            data["filename"] = str(filepath)
-            document = Document.from_dict(data)
             self.walker.walk(document)
 
+    def _parse(self, filepath: Path) -> Document:
+        content = filepath.read_text("utf8")
+        language = self._detect_language(content)
+        offset = 0
+        if language not in ("en", "unknown"):
+            original_length = len(content.splitlines())
+            content = self._check_and_fix_language(language, content, str(filepath))
+            offset = len(content.splitlines()) - original_length
+        data = self.parser.parse(content)
+        data["filename"] = str(filepath)
+        data["offset"] = offset
+        return Document.from_dict(data)
+
     @staticmethod
-    def detect_language(content: str) -> str:
+    def _detect_language(content: str) -> str:
         if "Feature:" in content:
             return "en"
         for language, keywords in DIALECTS.items():
@@ -99,14 +103,23 @@ class GherkinLinter(BaseChecker):
             return content.replace(f"# language: {match[0]}", f"# language: {language}")
         return content
 
-    def _handle_parser_error(self, exc: CompositeParserException, node: Node) -> None:
+    def _handle_parser_error(
+        self, exc: CompositeParserException, filepath: Path
+    ) -> None:
+        document = Document(
+            line=0,
+            column=0,
+            filename=str(filepath),
+            feature=None,
+            comments=[],
+        )
         offending_lines = str(exc).splitlines()[1:]
         for offending_line in offending_lines:
-            node.line, node.column, error_msg = parse.search(
+            document.line, document.column, error_msg = parse.search(
                 "({:d}:{:d}): {}, got", offending_line
             )
             self.reporter.add_message(
                 "unparseable-file",
-                node,
+                document,
                 error_msg=error_msg,
             )

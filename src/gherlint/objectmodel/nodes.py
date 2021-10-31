@@ -20,6 +20,10 @@ class Node(ABC):
         self.parent = parent
         self.line = line
         self.column = column
+        root = self.get_root()
+        if isinstance(root, Document) and root is not self:
+            # shift the line number if the ``Document`` root node has an offset
+            self.line -= root.offset
 
     def __repr__(self):
         return f"{self.__class__.__name__}(line={self.line}, column={self.column})"
@@ -48,11 +52,14 @@ class Document(Node):
         feature: Optional[Feature],
         comments: List[str],
         parent=None,
+        offset: int = 0,
     ):
         super().__init__(parent, line, column)
         self.filename = filename
         self.feature = feature
         self.comments = comments
+        # if we added a language tag we must shift all messages to refer to the correct line numbers
+        self.offset = offset
 
     @property
     def children(self):
@@ -67,6 +74,7 @@ class Document(Node):
             filename=data["filename"],
             feature=None,
             comments=data["comments"],
+            offset=data.get("offset", 0),
         )
         if feature_data:
             instance.feature = Feature.from_dict(feature_data, parent=instance)

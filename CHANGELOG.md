@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## V0.4.0
+New checks:
+* ``unused-parameter``
+* ``empty-background``
+
+Other changes:
+* ``unparseable-file`` is now issued for all nodes that offend the ``gherkin`` parser together with more error information provided by it
+* ``missing-parameter`` now clearly states what parameter is not defined in the examples
+* If ``gherlint`` patches the file contents with a forgotten ``# language`` tag the line numbers for messages
+are no longer shifted
 
 ## V0.3.0
 New checks:

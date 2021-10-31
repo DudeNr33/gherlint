@@ -1,0 +1,3 @@
+************* correct_linenumbers_after_language_patch.feature
+correct_linenumbers_after_language_patch.feature:0:0: A feature file which uses an other language than English should declare this with a '# language: <lang>' tag at the beginning of the file. (missing-language-tag)
+correct_linenumbers_after_language_patch.feature:3:1: Scenario does not contain any When step (missing-when-step)
