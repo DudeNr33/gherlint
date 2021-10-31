@@ -269,6 +269,7 @@ class Examples(Node):
         self.description = description
         self.parameters = parameters
         self.values = values
+        self.number_of_entries = len(values[parameters[0]])
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Examples:

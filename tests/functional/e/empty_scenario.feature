@@ -7,9 +7,13 @@ Feature: Functional test for empty-scenario
 
     Scenario: Empty scenario
 
-    Scenario Outline: Empty scenario outline
+    Scenario Outline: Empty scenario outline <foo>
+        Examples:
+            | foo |
+            | a   |
+            | b   |
 
     Scenario: Empty but with description
 
-        This scenario has a description, but still the empty-scenario message should
-        trigger because there are no steps!
+This scenario has a description, but still the empty-scenario message should
+trigger because there are no steps!

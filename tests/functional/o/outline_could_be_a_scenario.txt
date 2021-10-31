@@ -1,0 +1,3 @@
+************* outline_could_be_a_scenario.feature
+outline_could_be_a_scenario.feature:3:5: This outline contains no or only one example, consider using a normal scenario instead (outline-could-be-a-scenario)
+outline_could_be_a_scenario.feature:8:5: This outline contains no or only one example, consider using a normal scenario instead (outline-could-be-a-scenario)

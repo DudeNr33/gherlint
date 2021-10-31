@@ -4,6 +4,7 @@
 New checks:
 * ``unused-parameter``
 * ``empty-background``
+* ``outline-could-be-a-scenario``
 
 Other changes:
 * ``unparseable-file`` is now issued for all nodes that offend the ``gherkin`` parser together with more error information provided by it

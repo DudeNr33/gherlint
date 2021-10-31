@@ -58,9 +58,10 @@ class CompletenessChecker(BaseChecker):
     ) -> None:
         if not node.name.strip():
             self.reporter.add_message("missing-scenario-name", node)
-        if not node.children:
+        if node.steps:
+            self._check_missing_step_type(node)
+        else:
             self.reporter.add_message("empty-scenario", node)
-        self._check_missing_step_type(node)
 
     def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
         # all checks relevant to normal scenarios apply for outlines as well
@@ -105,7 +106,7 @@ class CompletenessChecker(BaseChecker):
             return
         required_step_types = ("given", "when", "then")
         for step_type in required_step_types:
-            if not any(step.type == step_type for step in node.children):
+            if not any(step.type == step_type for step in node.steps):
                 self.reporter.add_message(f"missing-{step_type}-step", node)
 
     def _check_unused_parameter(self, node: nodes.Examples) -> None:
