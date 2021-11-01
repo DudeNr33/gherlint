@@ -263,7 +263,7 @@ class Step(Node):
         while current_step_index > 0:
             current_step_index -= 1
             previous_step = self.parent.steps[current_step_index]
-            if previous_step.type not in ("and", "*"):
+            if previous_step.type not in ("and", "but"):
                 return previous_step.type
         return "unknown"
 
