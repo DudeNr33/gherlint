@@ -16,23 +16,23 @@ class CompletenessChecker(BaseChecker):
     """Concerned about things like missing examples etc."""
 
     MESSAGES = [
-        Message("W001", "missing-feature-name", "Feature has no name"),
-        Message("W002", "missing-scenario-name", "Scenario has no name"),
+        Message("W101", "missing-feature-name", "Feature has no name"),
+        Message("W102", "missing-scenario-name", "Scenario has no name"),
         Message(
-            "E004",
+            "E101",
             "missing-parameter",
             "'{parameter}' is not defined in the Examples section",
         ),
-        Message("W003", "file-has-no-feature", "No Feature given in file"),
-        Message("W004", "empty-feature", "Feature has no scenarios"),
-        Message("W005", "empty-scenario", "Scenario does not contain any steps"),
-        Message("W006", "empty-background", "Background does not contain any steps"),
+        Message("W103", "file-has-no-feature", "No Feature given in file"),
+        Message("W104", "empty-feature", "Feature has no scenarios"),
+        Message("W105", "empty-scenario", "Scenario does not contain any steps"),
+        Message("W106", "empty-background", "Background does not contain any steps"),
         Message(
-            "C001", "missing-given-step", "Scenario does not contain any Given step"
+            "C101", "missing-given-step", "Scenario does not contain any Given step"
         ),
-        Message("C002", "missing-when-step", "Scenario does not contain any When step"),
-        Message("C003", "missing-then-step", "Scenario does not contain any Then step"),
-        Message("R001", "unused-parameter", "Parameter '{parameter}' is not used"),
+        Message("C102", "missing-when-step", "Scenario does not contain any When step"),
+        Message("C103", "missing-then-step", "Scenario does not contain any Then step"),
+        Message("R101", "unused-parameter", "Parameter '{parameter}' is not used"),
     ]
 
     def __init__(self, reporter: Reporter) -> None:

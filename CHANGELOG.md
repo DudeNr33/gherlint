@@ -14,6 +14,7 @@ Other changes:
 are no longer shifted
 * Types of ``And`` and ``But`` steps are now inferred correctly
 * New command ``fix-language-tags`` to automatically add or fix missing or incorrect language tags
+* Rename some message codes to have a defined structure: each checker has its own hundreds digit.
 
 ## V0.3.0
 New checks:
