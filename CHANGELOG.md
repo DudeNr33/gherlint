@@ -5,12 +5,14 @@ New checks:
 * ``unused-parameter``
 * ``empty-background``
 * ``outline-could-be-a-scenario``
+* ``consider-using-background``
 
 Other changes:
 * ``unparseable-file`` is now issued for all nodes that offend the ``gherkin`` parser together with more error information provided by it
 * ``missing-parameter`` now clearly states what parameter is not defined in the examples
 * If ``gherlint`` patches the file contents with a forgotten ``# language`` tag the line numbers for messages
 are no longer shifted
+* Types of ``And`` and ``But`` steps are now inferred correctly
 
 ## V0.3.0
 New checks:

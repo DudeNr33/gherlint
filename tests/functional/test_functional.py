@@ -19,7 +19,7 @@ def idfn(val):
     "feature_file, expected_output", list(zip(feature_files, result_files)), ids=idfn
 )
 def test_expected_outcome(feature_file: Path, expected_output: Path, capsys) -> None:
-    linter = GherkinLinter(str(feature_file))
+    linter = GherkinLinter(feature_file)
     linter.run()
     captured = capsys.readouterr()
     # replace full file paths with only the filename to be independent from the

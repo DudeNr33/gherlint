@@ -1,0 +1,7 @@
+************* consider_using_background.feature
+consider_using_background.feature:4:9: Consider putting common 'Given' steps in a Background (consider-using-background)
+consider_using_background.feature:5:9: Consider putting common 'Given' steps in a Background (consider-using-background)
+consider_using_background.feature:12:9: Consider putting common 'Given' steps in a Background (consider-using-background)
+consider_using_background.feature:13:9: Consider putting common 'Given' steps in a Background (consider-using-background)
+consider_using_background.feature:25:9: Consider putting common 'Given' steps in a Background (consider-using-background)
+consider_using_background.feature:26:9: Consider putting common 'Given' steps in a Background (consider-using-background)
