@@ -2,11 +2,9 @@ from pathlib import Path
 from typing import List
 
 import parse
-from gherkin.dialect import DIALECTS
-from gherkin.parser import CompositeParserException, Parser
 
 from gherlint.checkers.base_checker import BaseChecker
-from gherlint.objectmodel.nodes import Document
+from gherlint.parser import GherkinParser, ParseResult
 from gherlint.registry import CheckerRegistry
 from gherlint.reporting import Message, TextReporter
 from gherlint.walker import ASTWalker
@@ -41,7 +39,6 @@ class GherkinLinter(BaseChecker):
             checker(self.reporter) for checker in self.checker_registry
         ]
         self.walker = ASTWalker(self.checkers)
-        self.parser = Parser()
 
     def run(self) -> None:
         """Lint all feature files"""
@@ -52,74 +49,30 @@ class GherkinLinter(BaseChecker):
                 self.lint_file(filepath)
 
     def lint_file(self, filepath: Path) -> None:
-        try:
-            document = self._parse(filepath)
-        except CompositeParserException as exc:
-            self._handle_parser_error(exc, filepath)
-        else:
-            self.walker.walk(document)
-
-    def _parse(self, filepath: Path) -> Document:
-        content = filepath.read_text("utf8")
-        language = self._detect_language(content)
-        offset = 0
-        if language not in ("en", "unknown"):
-            original_length = len(content.splitlines())
-            content = self._check_and_fix_language(language, content, str(filepath))
-            offset = len(content.splitlines()) - original_length
-        data = self.parser.parse(content)
-        data["filename"] = str(filepath)
-        data["offset"] = offset
-        return Document.from_dict(data)
-
-    @staticmethod
-    def _detect_language(content: str) -> str:
-        if "Feature:" in content:
-            return "en"
-        for language, keywords in DIALECTS.items():
-            if any(keyword in content for keyword in keywords["feature"]):
-                return language
-        return "unknown"
-
-    def _check_and_fix_language(
-        self, language: str, content: str, filepath: str
-    ) -> str:
-        match = parse.search("# language: {:l}\n", content)
-        if not match:
+        result = GherkinParser().parse(filepath)
+        if result.exception:
+            self._handle_parser_error(result)
+            return
+        if result.added_language_tag:
             self.reporter.add_message(
                 "missing-language-tag",
-                Document(
-                    line=0, column=0, filename=filepath, feature=None, comments=[]
-                ),
+                result.document,
             )
-            return f"# language: {language}\n" + content
-        if match[0] != language:
+        elif result.fixed_language_tag:
             self.reporter.add_message(
                 "wrong-language-tag",
-                Document(
-                    line=0, column=0, filename=filepath, feature=None, comments=[]
-                ),
+                result.document,
             )
-            return content.replace(f"# language: {match[0]}", f"# language: {language}")
-        return content
+        self.walker.walk(result.document)
 
-    def _handle_parser_error(
-        self, exc: CompositeParserException, filepath: Path
-    ) -> None:
-        document = Document(
-            line=0,
-            column=0,
-            filename=str(filepath),
-            feature=None,
-            comments=[],
-        )
-        offending_lines = str(exc).splitlines()[1:]
+    def _handle_parser_error(self, result: ParseResult) -> None:
+        offending_lines = str(result.exception).splitlines()[1:]
         for offending_line in offending_lines:
-            document.line, document.column, error_msg = parse.search(
+            result.document.line, result.document.column, error_msg = parse.search(
                 "({:d}:{:d}): {}, got", offending_line
             )
             self.reporter.add_message(
                 "unparseable-file",
-                document,
+                result.document,
                 error_msg=error_msg,
             )
