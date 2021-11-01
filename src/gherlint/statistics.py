@@ -2,11 +2,10 @@ from collections import Counter
 from pathlib import Path
 from typing import Tuple
 
-from gherkin.parser import Parser
-
 from gherlint import utils
 from gherlint.checkers.base_checker import BaseChecker
 from gherlint.objectmodel import nodes
+from gherlint.parser import GherkinParser
 from gherlint.reporting import TextReporter
 from gherlint.walker import ASTWalker
 
@@ -39,12 +38,10 @@ class Statistics(BaseChecker):
 
 
 def compute_metrics(path: Path) -> None:
-    parser = Parser()
+    parser = GherkinParser()
     statistics = Statistics(reporter=TextReporter())
     walker = ASTWalker(checkers=[statistics])
     for file in utils.iter_feature_files(path):
-        data = parser.parse(str(file))
-        data["filename"] = str(file)
-        document = nodes.Document.from_dict(data)
-        walker.walk(document)
+        result = parser.parse(file)
+        walker.walk(result.document)
     statistics.print_summary()
