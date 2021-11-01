@@ -13,6 +13,7 @@ Other changes:
 * If ``gherlint`` patches the file contents with a forgotten ``# language`` tag the line numbers for messages
 are no longer shifted
 * Types of ``And`` and ``But`` steps are now inferred correctly
+* New command ``fix-language-tags`` to automatically add or fix missing or incorrect language tags
 
 ## V0.3.0
 New checks:

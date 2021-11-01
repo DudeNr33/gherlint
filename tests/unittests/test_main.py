@@ -66,3 +66,24 @@ class TestStatsCommand:
     def test_stats_without_options(self):
         CliRunner().invoke(cli, ["stats", "/my/path"])
         self.compute_metrics_mock.assert_called_once_with(Path("/my/path"))
+
+
+class TestFixLanguageTagsCommand:
+    language_fixer_class_mock: MagicMock
+    language_fixer_mock: MagicMock
+
+    @pytest.fixture(autouse=True)
+    def setup_mock(self):
+        self.language_fixer_mock = MagicMock()
+        with patch("gherlint.__main__.LanguageFixer") as self.language_fixer_class_mock:
+            self.language_fixer_class_mock.return_value = self.language_fixer_mock
+            yield
+
+    def test_fix_without_options(self):
+        CliRunner().invoke(cli, ["fix-language-tags", "/my/path"])
+        self.language_fixer_class_mock.assert_called_once_with(Path("/my/path"))
+        self.language_fixer_mock.run.assert_called_once_with(modify=True)
+
+    def test_dry_run(self):
+        CliRunner().invoke(cli, ["fix-language-tags", "--dry-run", "/my/path"])
+        self.language_fixer_mock.run.assert_called_once_with(modify=False)

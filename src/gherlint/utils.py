@@ -10,7 +10,7 @@ def iter_feature_files(path: Union[str, Path]) -> Iterator[Path]:
     if isinstance(path, str):
         path = Path(path)
     if path.is_file():
-        if path.suffix == "feature":
+        if path.suffix == ".feature":
             yield path
         else:
             raise UnsupportedFiletype(f"{path} is not a .feature file.")

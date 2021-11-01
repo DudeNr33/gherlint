@@ -11,6 +11,7 @@ from gherlint.objectmodel import nodes
 
 class ParseResult(NamedTuple):
     document: nodes.Document
+    content: str
     exception: Optional[CompositeParserException]
     added_language_tag: bool
     fixed_language_tag: bool
@@ -43,6 +44,7 @@ class GherkinParser:
             exception = exc
         return ParseResult(
             document=document,
+            content=self.content,
             exception=exception,
             added_language_tag=self.added_language_tag,
             fixed_language_tag=self.fixed_language_tag,

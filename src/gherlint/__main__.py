@@ -5,6 +5,7 @@ from pathlib import Path
 
 import click
 
+from gherlint.fixer import LanguageFixer
 from gherlint.linter import GherkinLinter
 from gherlint.statistics import compute_metrics
 
@@ -32,6 +33,25 @@ def lint(path: str) -> None:
 def stats(path: str) -> None:
     """Compute metrics over your feature files"""
     compute_metrics(Path(path))
+
+
+@cli.command()
+@click.option(
+    "--dry-run",
+    default=False,
+    is_flag=True,
+    help="Don't write to disk, only output which files would be modified",
+)
+@click.argument("path")
+def fix_language_tags(path: str, dry_run: bool) -> None:
+    """Add or fix language tags in feature files
+
+    If gherlint detects that a language other than English is used, it will
+    try to infer the correct language and add the corresponding tag.
+    If a language tag is present but does not fit to the file contents, the existing
+    tag will be replaced.
+    """
+    LanguageFixer(Path(path)).run(modify=not dry_run)
 
 
 if __name__ == "__main__":
