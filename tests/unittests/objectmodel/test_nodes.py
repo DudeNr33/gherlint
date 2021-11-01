@@ -310,10 +310,27 @@ class TestStep:
         steps = [
             Step(scenario, 0, 0, keyword, "first"),
             Step(scenario, 0, 0, "And ", "first"),
+            Step(scenario, 0, 0, "But ", "first"),
             Step(scenario, 0, 0, "And ", "first"),
         ]
         scenario.steps = steps
         assert all(step.inferred_type == keyword.lower().strip() for step in steps)
+
+    @staticmethod
+    def test_infer_with_given_when_then_structure():
+        scenario = Scenario(0, 0, None, [], "test", "", [], [])
+        steps = [
+            Step(scenario, 0, 0, "Given ", ""),
+            Step(scenario, 0, 0, "And ", ""),
+            Step(scenario, 0, 0, "When ", ""),
+            Step(scenario, 0, 0, "But ", ""),
+            Step(scenario, 0, 0, "Then ", ""),
+            Step(scenario, 0, 0, "And ", ""),
+        ]
+        scenario.steps = steps
+        assert steps[1].inferred_type == "given"
+        assert steps[3].inferred_type == "when"
+        assert steps[5].inferred_type == "then"
 
     @staticmethod
     def test_inferred_type_returns_unknown_if_uninferable():
@@ -322,6 +339,7 @@ class TestStep:
             Step(scenario, 0, 0, "And ", "first"),
             Step(scenario, 0, 0, "And ", "first"),
             Step(scenario, 0, 0, "And ", "first"),
+            Step(scenario, 0, 0, "But ", "first"),
         ]
         scenario.steps = steps
         assert all(step.inferred_type == "unknown" for step in steps)

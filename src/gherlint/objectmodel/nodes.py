@@ -253,7 +253,7 @@ class Step(Node):
 
     @property
     def inferred_type(self) -> str:
-        if not self.type == "and":
+        if not self.type in ("and", "but"):
             return self.type
         if not isinstance(self.parent, (Background, Scenario, ScenarioOutline)):
             raise InternalError(
