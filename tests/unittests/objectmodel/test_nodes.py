@@ -347,8 +347,9 @@ class TestStep:
 
 class TestMisc:
     @staticmethod
-    def test_get_root():
-        data = {
+    @pytest.fixture
+    def example_data():
+        return {
             "filename": "foo.feature",
             "feature": {
                 "tags": [],
@@ -394,6 +395,8 @@ class TestMisc:
             "comments": [],
         }
 
+    @staticmethod
+    def test_get_root(example_data):
         def get_all_children(node: Node, child_nodes: List[Node]) -> List[Node]:
             if hasattr(node, "children"):
                 child_nodes.extend(node.children)  # type: ignore
@@ -401,7 +404,20 @@ class TestMisc:
                     get_all_children(child, child_nodes)
             return child_nodes
 
-        root_node = Document.from_dict(data)
+        root_node = Document.from_dict(example_data)
         child_nodes = [root_node.feature]
         get_all_children(root_node.feature, child_nodes)
         assert all(child.get_root() is root_node for child in child_nodes)
+
+    @staticmethod
+    def test_get_parents(example_data):
+        def check_parents(node: Node, parents: List[Node]) -> None:
+            assert node.parents == parents
+            if hasattr(node, "children"):
+                parents = parents[:]
+                parents[0:0] = [node]
+                for child in node.children:  # type: ignore
+                    check_parents(child, parents)
+
+        current_node = Document.from_dict(example_data)
+        check_parents(current_node, parents=[])

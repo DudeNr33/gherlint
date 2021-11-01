@@ -29,6 +29,12 @@ class Node(ABC):
     def __repr__(self):
         return f"{self.__class__.__name__}(line={self.line}, column={self.column})"
 
+    @property
+    def parents(self) -> List[Node]:
+        if self.parent:
+            return [self.parent] + self.parent.parents
+        return []
+
     def get_root(self) -> Node:
         """Get the root node, i.e. the topmost parent in the hierarchy."""
         current = self
