@@ -303,6 +303,29 @@ class TestStep:
         assert all(param in step.parameters for param in parameters)
         assert len(parameters) == len(step.parameters)
 
+    @staticmethod
+    @pytest.mark.parametrize("keyword", ["Given ", "When ", "Then "])
+    def test_inferred_type(keyword):
+        scenario = Scenario(0, 0, None, [], "test", "", [], [])
+        steps = [
+            Step(scenario, 0, 0, keyword, "first"),
+            Step(scenario, 0, 0, "And ", "first"),
+            Step(scenario, 0, 0, "And ", "first"),
+        ]
+        scenario.steps = steps
+        assert all(step.inferred_type == keyword.lower().strip() for step in steps)
+
+    @staticmethod
+    def test_inferred_type_returns_unknown_if_uninferable():
+        scenario = Scenario(0, 0, None, [], "test", "", [], [])
+        steps = [
+            Step(scenario, 0, 0, "And ", "first"),
+            Step(scenario, 0, 0, "And ", "first"),
+            Step(scenario, 0, 0, "And ", "first"),
+        ]
+        scenario.steps = steps
+        assert all(step.inferred_type == "unknown" for step in steps)
+
 
 class TestMisc:
     @staticmethod

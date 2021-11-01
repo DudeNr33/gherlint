@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import parse
 
 from gherlint import utils
+from gherlint.exceptions import InternalError
 
 
 class Node(ABC):
@@ -93,14 +94,24 @@ class Feature(Node):
         language: str,
         name: str,
         description: str,
-        children: List[Union[Background, Scenario, ScenarioOutline]],
+        scenarios: List[Union[Scenario, ScenarioOutline]],
+        background: Background = None,
     ):
         super().__init__(parent, line, column)
         self.tags = tags
         self.language = language
         self.name = name
         self.description = description
-        self.children = children
+        self.background = background
+        self.scenarios = scenarios
+
+    @property
+    def children(self) -> List[Union[Background, Scenario, ScenarioOutline]]:
+        children: List[Union[Background, Scenario, ScenarioOutline]] = []
+        if self.background:
+            children.append(self.background)
+        children.extend(self.scenarios)
+        return children
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Feature:
@@ -112,26 +123,39 @@ class Feature(Node):
             language=data["language"],
             name=data["name"],
             description=data["description"],
-            children=[],
+            scenarios=[],
         )
         for child in data["children"]:
             for keyword, child_data in child.items():
-                if keyword == "scenario":
-                    if child_data["keyword"] in utils.get_keyword_candidates(
-                        "scenario"
-                    ):
-                        instance.children.append(
-                            Scenario.from_dict(child_data, parent=instance)
-                        )
-                    else:
-                        instance.children.append(
-                            ScenarioOutline.from_dict(child_data, parent=instance)
-                        )
-                elif keyword == "background":
-                    instance.children.append(
-                        Background.from_dict(child_data, parent=instance)
+                if _is_background(keyword, child_data):
+                    instance.background = Background.from_dict(
+                        child_data, parent=instance
+                    )
+                elif _is_scenario(keyword, child_data):
+                    instance.scenarios.append(
+                        Scenario.from_dict(child_data, parent=instance)
+                    )
+                elif _is_outline(keyword, child_data):
+                    instance.scenarios.append(
+                        ScenarioOutline.from_dict(child_data, parent=instance)
                     )
         return instance
+
+
+def _is_scenario(keyword: str, data: Dict[str, Any]) -> bool:
+    return keyword == "scenario" and data["keyword"] in utils.get_keyword_candidates(
+        "scenario"
+    )
+
+
+def _is_outline(keyword: str, data: Dict[str, Any]) -> bool:
+    return keyword == "scenario" and data["keyword"] in utils.get_keyword_candidates(
+        "scenarioOutline"
+    )
+
+
+def _is_background(keyword: str, _: Dict[str, Any]) -> bool:
+    return keyword == "background"
 
 
 class Background(Node):
@@ -226,6 +250,22 @@ class Step(Node):
         self.type = self._get_english_keyword(keyword)
         self.text = text
         self.parameters = extract_parameters(text)
+
+    @property
+    def inferred_type(self) -> str:
+        if not self.type == "and":
+            return self.type
+        if not isinstance(self.parent, (Background, Scenario, ScenarioOutline)):
+            raise InternalError(
+                node=self, message="Unexpected type for parent of 'Step'"
+            )
+        current_step_index = self.parent.steps.index(self)
+        while current_step_index > 0:
+            current_step_index -= 1
+            previous_step = self.parent.steps[current_step_index]
+            if previous_step.type not in ("and", "*"):
+                return previous_step.type
+        return "unknown"
 
     @staticmethod
     def _get_english_keyword(keyword: str) -> str:

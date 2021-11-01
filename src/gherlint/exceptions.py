@@ -20,9 +20,11 @@ class InternalError(GherlintException):
         "so if you weren't doing anything fancy, please file a bug report."
     )
 
-    def __init__(self, node: Optional[nodes.Node], message: str = None) -> None:
+    def __init__(self, node: Optional[nodes.Node], message: str = "") -> None:
         super().__init__()
-        self.message = message or self.DEFAULT_MESSAGE
+        self.message = (
+            self.DEFAULT_MESSAGE + "\n" + message if message else self.DEFAULT_MESSAGE
+        )
         if node:
             self.message += (
                 f" The error occured when processing the following node: {node}"
