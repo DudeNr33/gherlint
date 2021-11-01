@@ -32,8 +32,9 @@ Options:
   -h, --help  Show this message and exit.
 
 Commands:
-  lint   Perform linting of feature files
-  stats  Compute metrics over your feature files
+  fix-language-tags  Add or fix language tags in feature files
+  lint               Perform linting of feature files
+  stats              Compute metrics over your feature files
         """.strip()
         )
 
