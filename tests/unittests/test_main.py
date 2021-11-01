@@ -6,7 +6,7 @@ called with the expected set of parameters.
 Out of scope:
 End-to-end tests which actually execute any code outside ``__main__.py``
 """
-
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -50,8 +50,8 @@ class TestLintCommand:
             yield
 
     def test_lint_without_options(self):
-        CliRunner().invoke(cli, ["lint"])
-        self.linter_class_mock.assert_called_once_with(".")
+        CliRunner().invoke(cli, ["lint", "/my/path"])
+        self.linter_class_mock.assert_called_once_with(Path("/my/path"))
         self.linter_mock.run.assert_called_once()
 
 
@@ -64,5 +64,5 @@ class TestStatsCommand:
             yield
 
     def test_stats_without_options(self):
-        CliRunner().invoke(cli, ["stats"])
-        self.compute_metrics_mock.assert_called_once_with(".")
+        CliRunner().invoke(cli, ["stats", "/my/path"])
+        self.compute_metrics_mock.assert_called_once_with(Path("/my/path"))
