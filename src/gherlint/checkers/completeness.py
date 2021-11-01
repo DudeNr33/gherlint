@@ -74,7 +74,10 @@ class CompletenessChecker(BaseChecker):
         self.used_parameters.clear()
 
     def visit_examples(self, node: nodes.Examples) -> None:
-        self._check_unused_parameter(node)
+        if isinstance(node.parent, nodes.ScenarioOutline):
+            # Don't run this check if we are inside a normal scenario.
+            # If examples are used we have a separate check for this (examples-outside-scenario-outline).
+            self._check_unused_parameter(node)
 
     def visit_step(self, node: nodes.Step) -> None:
         if isinstance(node.parent, nodes.ScenarioOutline):

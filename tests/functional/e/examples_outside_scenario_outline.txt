@@ -1,0 +1,4 @@
+************* examples_outside_scenario_outline.feature
+examples_outside_scenario_outline.feature:9:9: Examples used outside a Scenario Outline (examples-outside-scenario-outline)
+examples_outside_scenario_outline.feature:19:9: Examples used outside a Scenario Outline (examples-outside-scenario-outline)
+examples_outside_scenario_outline.feature:24:9: Examples used outside a Scenario Outline (examples-outside-scenario-outline)
