@@ -12,16 +12,30 @@ from gherlint.walker import ASTWalker
 
 class Statistics(BaseChecker):
     counter: Counter = Counter()
-    elements: Tuple[str, ...] = ("Features", "Scenario Outlines", "Scenarios", "Steps")
+    elements: Tuple[str, ...] = (
+        "Features",
+        "Backgrounds",
+        "Scenario Outlines",
+        "Examples",
+        "Scenarios",
+        "Steps",
+        "Unparseable Files",
+    )
 
     def visit_feature(self, _: nodes.Feature) -> None:
         self.counter.update(["Features"])
+
+    def visit_background(self, _: nodes.Background) -> None:
+        self.counter.update(["Backgrounds"])
 
     def visit_scenario(self, _: nodes.Scenario) -> None:
         self.counter.update(["Scenarios"])
 
     def visit_scenariooutline(self, _: nodes.ScenarioOutline) -> None:
         self.counter.update(["Scenario Outlines"])
+
+    def visit_examples(self, node: nodes.Examples) -> None:
+        self.counter.update(["Examples"] * node.number_of_entries)
 
     def visit_step(self, _: nodes.Step) -> None:
         self.counter.update(["Steps"])
@@ -43,5 +57,8 @@ def compute_metrics(path: Path) -> None:
     walker = ASTWalker(checkers=[statistics])
     for file in utils.iter_feature_files(path):
         result = parser.parse(file)
-        walker.walk(result.document)
+        if result.exception:
+            statistics.counter.update(["Unparseable Files"])
+        else:
+            walker.walk(result.document)
     statistics.print_summary()
