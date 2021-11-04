@@ -11,6 +11,7 @@ from gherlint.objectmodel.nodes import (
     Scenario,
     ScenarioOutline,
     Step,
+    Tag,
 )
 
 
@@ -69,10 +70,22 @@ class TestFeature:
 
     @staticmethod
     def test_tagged_feature(feature_data):
-        tags = ["tag1", "tag2"]
+        tags = [
+            {
+                "id": "3",
+                "location": {"line": 5, "column": 5},
+                "name": "@tag1",
+            },
+            {
+                "id": "3",
+                "location": {"line": 6, "column": 5},
+                "name": "@tag2",
+            },
+        ]
         feature_data["tags"] = tags
         feature = Feature.from_dict(feature_data, parent=None)
-        assert feature.tags == tags
+        assert feature.tags[0].name == "@tag1"
+        assert feature.tags[1].name == "@tag2"
 
     @staticmethod
     def test_scenarios_are_instantiated(feature_data):
@@ -421,3 +434,19 @@ class TestMisc:
 
         current_node = Document.from_dict(example_data)
         check_parents(current_node, parents=[])
+
+
+class TestTags:
+    @staticmethod
+    @pytest.fixture
+    def example_data():
+        return {
+            "id": "3",
+            "location": {"line": 5, "column": 5},
+            "name": "@alreadyonfeature",
+        }
+
+    @staticmethod
+    def test_create_tag(example_data):
+        tag = Tag.from_dict(example_data, parent=None)
+        assert isinstance(tag, Tag)

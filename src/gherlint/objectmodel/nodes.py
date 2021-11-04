@@ -96,7 +96,7 @@ class Feature(Node):
         line: int,
         column: int,
         parent: Optional[Node],
-        tags: List[str],
+        tags: List[Tag],
         language: str,
         name: str,
         description: str,
@@ -112,8 +112,9 @@ class Feature(Node):
         self.scenarios = scenarios
 
     @property
-    def children(self) -> List[Union[Background, Scenario, ScenarioOutline]]:
-        children: List[Union[Background, Scenario, ScenarioOutline]] = []
+    def children(self) -> List[Union[Tag, Background, Scenario, ScenarioOutline]]:
+        children: List[Union[Tag, Background, Scenario, ScenarioOutline]] = []
+        children.extend(self.tags)
         if self.background:
             children.append(self.background)
         children.extend(self.scenarios)
@@ -125,12 +126,13 @@ class Feature(Node):
             line=data["location"]["line"],
             column=data["location"]["column"],
             parent=parent,
-            tags=data["tags"],
+            tags=[],
             language=data["language"],
             name=data["name"],
             description=data["description"],
             scenarios=[],
         )
+        instance.tags = [Tag.from_dict(tag, parent=instance) for tag in data["tags"]]
         for child in data["children"]:
             for keyword, child_data in child.items():
                 if _is_background(keyword, child_data):
@@ -207,7 +209,7 @@ class Scenario(Node):
         line: int,
         column: int,
         parent: Optional[Node],
-        tags: List[str],
+        tags: List[Tag],
         name: str,
         description: str,
         examples: List[Examples],
@@ -223,7 +225,7 @@ class Scenario(Node):
 
     @property
     def children(self):
-        return self.steps + self.examples
+        return self.tags + self.steps + self.examples
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Scenario:
@@ -231,12 +233,13 @@ class Scenario(Node):
             line=data["location"]["line"],
             column=data["location"]["column"],
             parent=parent,
-            tags=data["tags"],
+            tags=[],
             name=data["name"],
             description=data["description"],
             examples=[],
             steps=[],
         )
+        instance.tags = [Tag.from_dict(tag, instance) for tag in data["tags"]]
         instance.examples = [
             Examples.from_dict(d, parent=instance) for d in data["examples"]
         ]
@@ -303,7 +306,7 @@ class Examples(Node):
         parent: Optional[Node],
         line: int,
         column: int,
-        tags: List[str],
+        tags: List[Tag],
         name: str,
         description: str,
         parameters: List[str],
@@ -317,6 +320,10 @@ class Examples(Node):
         self.values = values
         self.number_of_entries = len(values[parameters[0]])
 
+    @property
+    def children(self) -> List[Tag]:
+        return self.tags
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Examples:
         parameters: List[str] = [cell["value"] for cell in data["tableHeader"]["cells"]]
@@ -324,15 +331,35 @@ class Examples(Node):
         for row in data["tableBody"]:
             for param, entry in zip(parameters, row["cells"]):
                 values[param].append(entry["value"])
-        return cls(
+        instance = cls(
             line=data["location"]["line"],
             column=data["location"]["column"],
             parent=parent,
-            tags=data["tags"],
+            tags=[],
             name=data["name"],  # can this be filled?!
             description=data["description"],
             parameters=parameters,
             values=values,
+        )
+        instance.tags = [Tag.from_dict(tag, parent=instance) for tag in data["tags"]]
+        return instance
+
+
+class Tag(Node):
+    def __init__(self, parent: Optional[Node], line: int, column: int, name: str):
+        super().__init__(parent, line, column)
+        self.name = name
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Tag) and self.name == other.name
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Tag:
+        return cls(
+            parent=parent,
+            line=data["location"]["line"],
+            column=data["location"]["column"],
+            name=data["name"],
         )
 
 
