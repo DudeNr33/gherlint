@@ -53,11 +53,7 @@ class ComplexityChecker(BaseChecker):
 
     def leave_feature(self, node: nodes.Feature) -> None:
         if len(node.scenarios) > 1 and self.common_given_steps:
-            for scenario in (
-                child_node
-                for child_node in node.children
-                if not isinstance(child_node, nodes.Background)
-            ):
+            for scenario in (child_node for child_node in node.scenarios):
                 for step in scenario.steps:
                     if (
                         step.inferred_type == "given"
