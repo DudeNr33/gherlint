@@ -1,0 +1,5 @@
+************* duplicated_tag.feature
+duplicated_tag.feature:7:5: Tag '@alreadyonfeature' already present on the parent element (duplicated-tag)
+duplicated_tag.feature:14:5: Tag '@alreadyonfeature' already present on the parent element (duplicated-tag)
+duplicated_tag.feature:23:9: Tag '@alreadyonfeature' already present on the parent element (duplicated-tag)
+duplicated_tag.feature:23:9: Tag '@alreadyonoutline' already present on the parent element (duplicated-tag)

@@ -7,6 +7,7 @@ New checks:
 * ``outline-could-be-a-scenario``
 * ``consider-using-background``
 * ``examples-outside-scenario-outline``
+* ``duplicated-tag``
 
 Other changes:
 * ``unparseable-file`` is now issued for all nodes that offend the ``gherkin`` parser together with more error information provided by it
