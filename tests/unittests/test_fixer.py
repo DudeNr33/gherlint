@@ -13,19 +13,22 @@ class TestLanguageFixer:
     @pytest.fixture()
     def testfiles(self, tmpdir):
         """Set up some files to test with in a temporary directory"""
-        (tmpdir / self.GOOD_FILE).write(
+        (tmpdir / self.GOOD_FILE).write_text(
             """# language: de
 Funktionalität: Test
-        """
+        """,
+            encoding="utf8",
         )
-        (tmpdir / self.MISSING_TAG).write(
+        (tmpdir / self.MISSING_TAG).write_text(
             """Funktionalität: Test
-        """
+        """,
+            encoding="utf8",
         )
-        (tmpdir / self.WRONG_TAG).write(
+        (tmpdir / self.WRONG_TAG).write_text(
             """# language: es
 Funktionalität: Test
-        """
+        """,
+            encoding="utf8",
         )
         yield tmpdir
 
