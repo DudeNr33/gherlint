@@ -1,3 +1,4 @@
 # additional requirements to build the documentation
 plantuml
 six
+python-docs-theme
