@@ -10,6 +10,7 @@ Welcome to gherlint's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   messages/list_of_messages
    technical_reference/node_classes
    technical_reference/architecture
 
