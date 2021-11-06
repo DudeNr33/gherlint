@@ -37,7 +37,7 @@ sphinxcontrib-plantuml = "^0.22"
 plantuml = "^0.3.0"
 
 [tool.poetry.extras]
-docs = ["sphinx"]
+docs = ["sphinx", "plantuml"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
