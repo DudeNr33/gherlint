@@ -9,6 +9,7 @@ New checks:
 * ``examples-outside-scenario-outline``
 * ``duplicated-tag``
 * ``duplicated-scenario-name``
+* ``duplicated-feature-name``
 
 Other changes:
 * ``unparseable-file`` is now issued for all nodes that offend the ``gherkin`` parser together with more error information provided by it

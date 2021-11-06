@@ -29,10 +29,15 @@ class ConsistencyChecker(BaseChecker):
 
     def __init__(self, reporter: Reporter) -> None:
         super().__init__(reporter)
+        self.feature_names: Set[str] = set()
         self.scenario_names: Set[str] = set()
 
-    def visit_feature(self, _: nodes.Feature) -> None:
+    def visit_feature(self, node: nodes.Feature) -> None:
         self.scenario_names.clear()
+        if node.name in self.feature_names:
+            self.reporter.add_message("duplicated-feature-name", node)
+        if node.name:
+            self.feature_names.add(node.name)
 
     def visit_scenario(self, node: nodes.Scenario) -> None:
         for example in node.examples:
