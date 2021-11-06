@@ -1,0 +1,3 @@
+************* duplicated_scenario_name.feature
+duplicated_scenario_name.feature:13:5: Scenarios inside a Feature should have unique names (duplicated-scenario-name)
+duplicated_scenario_name.feature:18:5: Scenarios inside a Feature should have unique names (duplicated-scenario-name)
