@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## V0.5.0
+New checks:
+* ``duplicated-scenario-name``
+* ``duplicated-feature-name``
+
 ## V0.4.0
 New checks:
 * ``unused-parameter``
@@ -8,8 +13,6 @@ New checks:
 * ``consider-using-background``
 * ``examples-outside-scenario-outline``
 * ``duplicated-tag``
-* ``duplicated-scenario-name``
-* ``duplicated-feature-name``
 
 Other changes:
 * ``unparseable-file`` is now issued for all nodes that offend the ``gherkin`` parser together with more error information provided by it
