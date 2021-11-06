@@ -15,25 +15,7 @@ The :py:class:`ASTWalker` calls those methods on the checkers for each node whil
 The checkers themselves define one or several :py:class:`Message` which are registered in a central :py:class:`MessageStore`
 and can be emitted through a class that inherits from :py:class:`Reporter` (or defines the necessary methods).
 
-.. uml::
-    :caption: Static Representation
-
-    class CheckerRegistry {}
-    class ASTWalker {}
-    class BaseChecker {}
-    class GherkinLinter {}
-    class Message {}
-    class MessageStore {}
-    class Reporter {}
-    Reporter -up-* GherkinLinter
-    ASTWalker -up-* GherkinLinter
-    Reporter --* BaseChecker
-    BaseChecker "1" *-- "n" Message
-    MessageStore "1" *-left- "n" Message
-    BaseChecker --> MessageStore : uses
-    Reporter --> MessageStore : uses
-    GherkinLinter *-- CheckerRegistry
-    CheckerRegistry "1" *-- "n" BaseChecker
+.. image:: ../diagrams/static_representation.png
 
 
 Startup Phase
@@ -46,24 +28,7 @@ According to the configuration the :py:class:`GherkinLinter` creates the reporte
 the walker which will be necessary for running the linting operation.
 The linting itself is described in the next section.
 
-.. uml::
-    :caption: Startup Phase
-
-    actor User
-
-    User --> main ++ : gherlint lint (options)
-        main->main ++ : create_config(options)
-        return config
-        main --> GherkinLinter ++ : init(config)
-            GherkinLinter --> Reporter : init(config)
-            GherkinLinter->GherkinLinter ++ : load_checkers()
-            return checkers
-            GherkinLinter --> ASTWalker: init(checkers)
-            return linter
-        main --> GherkinLinter ++ : run
-        note right: the logic of the *run* method is described in a separate diagram
-        return exit_code
-    return sys.exit(exit_code)
+.. image:: ../diagrams/startup_phase.png
 
 
 The linting process is started by calling the :py:func:`run` method on :py:class:`GherkinLinter`.
@@ -75,37 +40,7 @@ the lowertype class name of the ``node``) on all checkers that implement them, b
 it recursively calls :py:func:`walk(child_node)` for all the ``node``'s children (if any) on itself.
 Afterwards the :py:func:`leave_nodetype` method is called analogous to the :py:func:`enter_nodetype` method.
 
-.. uml::
-    :caption: Linting Phase
-
-    main --> GherkinLinter ++ : run
-        loop for file in path
-            GherkinLinter->GherkinLinter ++ : lint_file(filepath)
-            GherkinLinter --> Document ++ : from_dict(data)
-            note right: This will recursively create the AST
-            return document
-            GherkinLinter --> ASTWalker ++ : walk(document)
-            loop for checker in checkers
-            opt implements visit_<node>
-                ASTWalker --> Checker ++ : visit_<node>(node)
-                return
-            end
-            end
-            loop for child_node in children
-            ASTWalker->ASTWalker ++ : walk(child_node)
-            note right: recursively traverse AST
-            return
-            end
-            loop for checker in checkers
-            opt implements leave_<node>
-                ASTWalker --> Checker ++ : leave_<node>(node)
-                return
-            end
-            end
-            return
-        end
-        return
-    return
+.. image:: ../diagrams/linting_phase.png
 
 
 Message Handling
@@ -118,58 +53,6 @@ whether a specific message shall be emitted. They use the :py:class:`Reporter` t
 by passing the ``name`` or ``id`` of the message. The :py:class:`Reporter` looks up the message instance
 through the :py:class:`MessageStore`.
 
-.. uml::
-    :caption: Message Handling (Static View)
+.. image:: ../diagrams/message_handling_static.png
 
-    class Reporter {
-        add_message(msg: Message, node: Node)
-    }
-    class Message {
-        id : str
-        name: str
-        description : str
-    }
-    class MessageStore {
-        messages : List[Message]
-        register_message(msg: Message) -> None
-        get_by_id(id: str) -> Message
-        get_by_name(name: str) -> Message
-    }
-    class Checker {
-        messages : List[Message]
-        visit_<node>(node: Node) -> None
-        leave_<node>(node: Node) -> None
-    }
-
-    Checker "1" *-down- "n" Message
-    MessageStore "1" *-up- "n" Message
-    Checker *-- Reporter
-    Checker --> MessageStore : uses
-    Reporter --> MessageStore : uses
-
-
-.. uml::
-    :caption: Message Handling (Dynamic View)
-
-    participant Checker
-    participant Reporter
-    participant MessageStore
-    group Initialization of Checker
-        loop for message in messages
-            Checker --> MessageStore ++ : register_message(message)
-            return
-        end
-    end
-    group Linting Process
-        Checker --> Reporter ++ : add_message(id_or_name)
-            alt matches_id_pattern
-                Reporter --> MessageStore ++ : get_by_id(id_or_name)
-                return message
-            else matches_name_pattern
-                Reporter --> MessageStore ++ : get_by_name(id_or_name)
-                return message
-            end
-            Reporter->Reporter ++ : emit(message)
-            return
-        return
-    end
+.. image:: ../diagrams/message_handling_dynamic.png

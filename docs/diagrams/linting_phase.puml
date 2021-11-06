@@ -1,0 +1,30 @@
+@startuml Linting Phase
+main --> GherkinLinter ++ : run
+    loop for file in path
+        GherkinLinter->GherkinLinter ++ : lint_file(filepath)
+        GherkinLinter --> Document ++ : from_dict(data)
+        note right: This will recursively create the AST
+        return document
+        GherkinLinter --> ASTWalker ++ : walk(document)
+        loop for checker in checkers
+        opt implements visit_<node>
+            ASTWalker --> Checker ++ : visit_<node>(node)
+            return
+        end
+        end
+        loop for child_node in children
+        ASTWalker->ASTWalker ++ : walk(child_node)
+        note right: recursively traverse AST
+        return
+        end
+        loop for checker in checkers
+        opt implements leave_<node>
+            ASTWalker --> Checker ++ : leave_<node>(node)
+            return
+        end
+        end
+        return
+    end
+    return
+return
+@enduml

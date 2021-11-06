@@ -1,0 +1,18 @@
+@startuml Static Representation
+class CheckerRegistry {}
+class ASTWalker {}
+class BaseChecker {}
+class GherkinLinter {}
+class Message {}
+class MessageStore {}
+class Reporter {}
+Reporter -up-* GherkinLinter
+ASTWalker -up-* GherkinLinter
+Reporter --* BaseChecker
+BaseChecker "1" *-- "n" Message
+MessageStore "1" *-left- "n" Message
+BaseChecker --> MessageStore : uses
+Reporter --> MessageStore : uses
+GherkinLinter *-- CheckerRegistry
+CheckerRegistry "1" *-- "n" BaseChecker
+@enduml

@@ -1,5 +1,7 @@
 # own stuff
 Checks.numbers
+# ignore the final images that are produced when building the documentation
+docs/diagrams/*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,0 +1,24 @@
+@startuml Message Handling (dynamic view)
+participant Checker
+participant Reporter
+participant MessageStore
+group Initialization of Checker
+    loop for message in messages
+        Checker --> MessageStore ++ : register_message(message)
+        return
+    end
+end
+group Linting Process
+    Checker --> Reporter ++ : add_message(id_or_name)
+        alt matches_id_pattern
+            Reporter --> MessageStore ++ : get_by_id(id_or_name)
+            return message
+        else matches_name_pattern
+            Reporter --> MessageStore ++ : get_by_name(id_or_name)
+            return message
+        end
+        Reporter->Reporter ++ : emit(message)
+        return
+    return
+end
+@enduml

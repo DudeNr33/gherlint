@@ -1,0 +1,27 @@
+@startuml Message Handling (static view)
+class Reporter {
+    add_message(msg: Message, node: Node)
+}
+class Message {
+    id : str
+    name: str
+    description : str
+}
+class MessageStore {
+    messages : List[Message]
+    register_message(msg: Message) -> None
+    get_by_id(id: str) -> Message
+    get_by_name(name: str) -> Message
+}
+class Checker {
+    messages : List[Message]
+    visit_<node>(node: Node) -> None
+    leave_<node>(node: Node) -> None
+}
+
+Checker "1" *-down- "n" Message
+MessageStore "1" *-up- "n" Message
+Checker *-- Reporter
+Checker --> MessageStore : uses
+Reporter --> MessageStore : uses
+@enduml

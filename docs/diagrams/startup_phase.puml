@@ -1,0 +1,17 @@
+@startuml Startup Phase
+actor User
+
+User --> main ++ : gherlint lint (options)
+    main->main ++ : create_config(options)
+    return config
+    main --> GherkinLinter ++ : init(config)
+        GherkinLinter --> Reporter : init(config)
+        GherkinLinter->GherkinLinter ++ : load_checkers()
+        return checkers
+        GherkinLinter --> ASTWalker: init(checkers)
+        return linter
+    main --> GherkinLinter ++ : run
+    note right: the logic of the *run* method is described in a separate diagram
+    return exit_code
+return sys.exit(exit_code)
+@enduml

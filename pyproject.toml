@@ -34,6 +34,7 @@ mypy = "^0.910"
 Sphinx = "^4.2.0"
 python-docs-theme = "^2021.11.1"
 sphinxcontrib-plantuml = "^0.22"
+plantuml = "^0.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
