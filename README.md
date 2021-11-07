@@ -12,16 +12,15 @@ Simply run ``pip install gherlint``.
 
 ## Linting Feature Files
 ``gherlint`` comes with a command line interface.
-To recursively lint all feature files in a directory, run ``gherlint lint``.
+To recursively lint all feature files in a directory, run ``gherlint lint <path>``.
 
 ## Computing Metrics
 ``gherlint`` can also create some metrics for you if you want to know how many features, scenarios and steps you have
-in your test suite. To do so, run ``gherlint stats``.
+in your test suite. To do so, run ``gherlint stats <path>``.
 
 ## Disclaimer
 ``gherlint`` is still in an early development phase. New checks will be added over time.
-If you want to contribute, feel free to open issues suggesting useful checkers, or open a pull request if you want
-to!
+If you want to contribute, feel free to open issues suggesting useful checkers, or open a pull request if you want to!
 
 ## Roadmap
 

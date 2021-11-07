@@ -4,6 +4,7 @@
 New checks:
 * ``duplicated-scenario-name``
 * ``duplicated-feature-name``
+* ``only-given-allowed-in-background``
 
 ## V0.4.0
 New checks:

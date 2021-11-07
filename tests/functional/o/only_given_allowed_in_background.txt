@@ -1,0 +1,4 @@
+************* only_given_allowed_in_background.feature
+only_given_allowed_in_background.feature:6:9: Only 'Given' steps are allowed in a Background (only-given-allowed-in-background)
+only_given_allowed_in_background.feature:7:9: Only 'Given' steps are allowed in a Background (only-given-allowed-in-background)
+only_given_allowed_in_background.feature:8:9: Only 'Given' steps are allowed in a Background (only-given-allowed-in-background)

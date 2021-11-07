@@ -25,6 +25,11 @@ class ConsistencyChecker(BaseChecker):
             "duplicated-scenario-name",
             "Scenarios inside a Feature should have unique names",
         ),
+        Message(
+            "C302",
+            "only-given-allowed-in-background",
+            "Only 'Given' steps are allowed in a Background",
+        ),
     ]
 
     def __init__(self, reporter: Reporter) -> None:
@@ -52,6 +57,9 @@ class ConsistencyChecker(BaseChecker):
     def visit_examples(self, node: nodes.Examples) -> None:
         self._check_duplicated_tag(node)
 
+    def visit_step(self, node: nodes.Step) -> None:
+        self._check_wrong_step_type_in_background(node)
+
     def _check_duplicated_scenario_name(
         self, node: Union[nodes.Scenario, nodes.ScenarioOutline]
     ):
@@ -70,6 +78,10 @@ class ConsistencyChecker(BaseChecker):
                 tag in parent.tags for parent in node.parents if hasattr(parent, "tags")  # type: ignore
             ):
                 self.reporter.add_message("duplicated-tag", node, tag=tag.name)
+
+    def _check_wrong_step_type_in_background(self, node: nodes.Step) -> None:
+        if isinstance(node.parent, nodes.Background) and node.inferred_type != "given":
+            self.reporter.add_message("only-given-allowed-in-background", node)
 
 
 def register_checker(registry: CheckerRegistry) -> None:
