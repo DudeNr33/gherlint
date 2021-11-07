@@ -1,6 +1,6 @@
 """Checker focussing on consistency issues."""
 
-from typing import Set, Union
+from typing import List, Sequence, Set, Union
 
 from gherlint.checkers.base_checker import BaseChecker
 from gherlint.objectmodel import nodes
@@ -30,6 +30,11 @@ class ConsistencyChecker(BaseChecker):
             "only-given-allowed-in-background",
             "Only 'Given' steps are allowed in a Background",
         ),
+        Message(
+            "R301",
+            "tag-could-be-on-parent",
+            "Common tags can be moved to the parent element",
+        ),
     ]
 
     def __init__(self, reporter: Reporter) -> None:
@@ -43,6 +48,8 @@ class ConsistencyChecker(BaseChecker):
             self.reporter.add_message("duplicated-feature-name", node)
         if node.name:
             self.feature_names.add(node.name)
+        if len(node.scenarios) > 1:
+            self._check_tag_could_be_on_parent(node, node.scenarios)
 
     def visit_scenario(self, node: nodes.Scenario) -> None:
         for example in node.examples:
@@ -53,6 +60,8 @@ class ConsistencyChecker(BaseChecker):
     def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
         self._check_duplicated_scenario_name(node)
         self._check_duplicated_tag(node)
+        if len(node.examples) > 1:
+            self._check_tag_could_be_on_parent(node, node.examples)
 
     def visit_examples(self, node: nodes.Examples) -> None:
         self._check_duplicated_tag(node)
@@ -82,6 +91,25 @@ class ConsistencyChecker(BaseChecker):
     def _check_wrong_step_type_in_background(self, node: nodes.Step) -> None:
         if isinstance(node.parent, nodes.Background) and node.inferred_type != "given":
             self.reporter.add_message("only-given-allowed-in-background", node)
+
+    def _check_tag_could_be_on_parent(
+        self, parent: nodes.Taggable, children: Sequence[nodes.Taggable]
+    ) -> None:
+        common_child_tags = self._get_common_tags(*children)
+        for tag in common_child_tags:
+            if tag in parent.tags:
+                # in this case the tag is duplicated, and duplicated-tag will trigger
+                continue
+            self.reporter.add_message("tag-could-be-on-parent", tag)
+
+    @staticmethod
+    def _get_common_tags(*children: nodes.Taggable) -> List[nodes.Tag]:
+        common_tags: List[nodes.Tag] = []
+        for child in children:
+            for tag in child.tags:
+                if all(tag in other_child.tags for other_child in children):
+                    common_tags.append(tag)
+        return common_tags
 
 
 def register_checker(registry: CheckerRegistry) -> None:

@@ -4,7 +4,7 @@ Nodes representing different elements of a Gherkin feature file.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Protocol, Tuple, Union
 
 import parse
 
@@ -12,6 +12,14 @@ from gherlint import utils
 from gherlint.exceptions import InternalError
 
 
+# Definition of protocols that help type checking
+class Taggable(Protocol):  # pylint: disable=too-few-public-methods
+    """A node that can be tagged."""
+
+    tags: List[Tag]
+
+
+# Definition of classes that represent nodes in the object model
 class Node(ABC):
     """
     Base class for all concrete node types.

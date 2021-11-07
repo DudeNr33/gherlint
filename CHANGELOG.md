@@ -5,6 +5,7 @@ New checks:
 * ``duplicated-scenario-name``
 * ``duplicated-feature-name``
 * ``only-given-allowed-in-background``
+* ``tag-could-be-on-parent``
 
 ## V0.4.0
 New checks:

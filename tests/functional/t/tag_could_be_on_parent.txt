@@ -1,0 +1,7 @@
+************* tag_could_be_on_parent.feature
+tag_could_be_on_parent.feature:3:5: Common tags can be moved to the parent element (tag-could-be-on-parent)
+tag_could_be_on_parent.feature:9:5: Common tags can be moved to the parent element (tag-could-be-on-parent)
+tag_could_be_on_parent.feature:15:5: Common tags can be moved to the parent element (tag-could-be-on-parent)
+tag_could_be_on_parent.feature:22:5: Common tags can be moved to the parent element (tag-could-be-on-parent)
+tag_could_be_on_parent.feature:28:9: Common tags can be moved to the parent element (tag-could-be-on-parent)
+tag_could_be_on_parent.feature:36:9: Common tags can be moved to the parent element (tag-could-be-on-parent)
