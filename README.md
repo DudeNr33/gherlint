@@ -1,3 +1,9 @@
+
+[![CI](https://github.com/DudeNr33/gherlint/actions/workflows/CI.yml/badge.svg)](https://github.com/DudeNr33/gherlint/actions/workflows/CI.yml)
+[![Documentation Status](https://readthedocs.org/projects/gherlint/badge/?version=latest)](https://gherlint.readthedocs.io/en/latest/?badge=latest)
+![PyPI](https://img.shields.io/pypi/v/gherlint)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gherlint)
+![PyPI - License](https://img.shields.io/pypi/l/gherlint)
 # gherlint
 Linter for Gherkin feature files, written in Python
 
@@ -30,6 +36,7 @@ The following work items are planned for the upcoming releases:
     * Add more output formats
     * Extend object model as necessary for checkers
     * Reach a stable interface for object model, checkers and reporters
+    * Add documentation
 * V1.x - V2.0:
     * Support configuration to enable/disable individual messages
     * Implement plugin architecture to allow users to add custom checkers
