@@ -66,6 +66,7 @@ class TestFeature:
     def test_empty_feature(feature_data):
         feature = Feature.from_dict(feature_data, parent=None)
         assert isinstance(feature, Feature)
+        # pylint: disable-next=use-implicit-booleaness-not-comparison
         assert feature.children == []
 
     @staticmethod

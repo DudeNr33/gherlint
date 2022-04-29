@@ -22,6 +22,7 @@ python = "^3.8"
 gherkin-official = "^22.0.0"
 click = "^8.0.1"
 parse = "^1.19.0"
+tomli = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.11.1"
@@ -45,13 +46,12 @@ load-plugins = "pylint_pytest,pylint.extensions.mccabe"
 
 [tool.pylint.messages_control]
 enable = "useless-suppression"
-disable = "missing-class-docstring,missing-module-docstring,missing-function-docstring"
+disable = "missing-class-docstring,missing-module-docstring,missing-function-docstring,too-few-public-methods"
 
 [tool.pylint.format]
 max-line-length = 120
 
 [tool.pylint.design]
-min-public-methods = 1
 max-args=10
 
 [tool.isort]
