@@ -16,12 +16,15 @@ class MyOptions(Options):
 
 
 class CheckerWithOptions(BaseChecker):
-    has_options = True
     options: MyOptions
 
 
 class CheckerWithoutOptions(BaseChecker):
     pass
+
+
+class CheckerWithWrongOptionsType(BaseChecker):
+    options: str  # type: ignore
 
 
 @pytest.fixture
@@ -77,3 +80,8 @@ def test_options_from_configfile() -> None:
     checker = CheckerWithOptions(reporter=TextReporter())
     assert checker.options.first_option == "ghi"
     assert checker.options.second_option is False
+
+
+def test_wrong_options_type_raises_type_error() -> None:
+    with pytest.raises(TypeError):
+        CheckerWithWrongOptionsType(reporter=TextReporter())
