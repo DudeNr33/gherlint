@@ -10,7 +10,8 @@ from gherlint.reporting import TextReporter
 
 
 class MyOptions(Options):
-    config_section: str = "my_options"
+    config_section = "my_options"
+
     first_option: str = "abc"
     second_option: bool = True
 
