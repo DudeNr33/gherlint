@@ -1,6 +1,5 @@
 from pathlib import Path
 from textwrap import dedent
-from typing import ClassVar
 
 import pytest
 
@@ -11,7 +10,7 @@ from gherlint.reporting import TextReporter
 
 
 class MyOptions(Options):
-    config_section: ClassVar[str] = "my_options"
+    config_section = "my_options"
 
     first_option: str = "abc"
     second_option: bool = True
