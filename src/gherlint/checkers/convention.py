@@ -30,12 +30,12 @@ class ConventionChecker(BaseChecker):
 
     MESSAGES = [
         Message(
-            "W401",
+            "C401",
             "feature-tags-pattern-mismatch",
             "Feature tags do not follow the pattern: {pattern}",
         ),
         Message(
-            "W402",
+            "C402",
             "scenario-tags-pattern-mismatch",
             "Scenario tags do not follow the pattern: {pattern}",
         ),
