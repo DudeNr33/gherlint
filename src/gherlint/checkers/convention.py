@@ -10,7 +10,7 @@ from gherlint.registry import CheckerRegistry
 from gherlint.reporting import Message
 
 
-class ConventionCheckerOptions(Options):
+class ConventionsCheckerOptions(Options):
     config_section = "convention"
 
     feature_tags_pattern: Optional[Pattern]
