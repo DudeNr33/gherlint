@@ -1,4 +1,4 @@
-Feature: Functional test for missing-required-scenario-tags
+Feature: Functional test for scenario-tags-pattern-mismatch
 
     @any_scenario_tag
     Scenario: Missing required scenario tags
