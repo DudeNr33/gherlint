@@ -25,8 +25,8 @@ class ConventionsCheckerOptions(Options):
         return None
 
 
-class ConventionChecker(BaseChecker):
-    options: ConventionCheckerOptions
+class ConventionsChecker(BaseChecker):
+    options: ConventionsCheckerOptions
 
     MESSAGES = [
         Message(
