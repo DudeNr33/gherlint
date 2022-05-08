@@ -1,0 +1,6 @@
+[convention]
+scenario_tags_pattern = '''
+(@success|@fail)  # Success or fail scenario
+|(?:@JIRA-\d{1,4})?  # Optional JIRA issue tag
+|(?:@wip)?  # Optional wip tag
+'''
