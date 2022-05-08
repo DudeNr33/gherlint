@@ -1,6 +1,6 @@
 Feature: Functional test for scenario-tags-pattern-mismatch
 
-    @any_scenario_tag
+    @any_scenario_tag @success
     Scenario: Missing required scenario tags
         Given I have configured required scenario tags
         When I run gherlint
