@@ -1,7 +1,9 @@
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
 
+from gherlint.config import Config
 from gherlint.linter import GherkinLinter
 
 feature_files = list(Path(__file__).parent.rglob("*.feature"))
@@ -15,14 +17,36 @@ def idfn(val):
     return ""
 
 
+# pylint: disable=protected-access
+@contextmanager
+def use_config(config: Path = None):
+    """Populates the cached config instance with the config specified for this test."""
+    Config._config = None
+    Config.get_config(config)
+
+    try:
+        yield
+    finally:
+        # reset cached config
+        Config._config = None
+
+
 @pytest.mark.parametrize(
     "feature_file, expected_output", list(zip(feature_files, result_files)), ids=idfn
 )
 def test_expected_outcome(feature_file: Path, expected_output: Path, capsys) -> None:
-    linter = GherkinLinter(feature_file)
-    linter.run()
+    if feature_file.with_suffix(".toml").exists():
+        config = feature_file.with_suffix(".toml")
+    else:
+        config = None
+
+    with use_config(config):
+        linter = GherkinLinter(feature_file)
+        linter.run()
+
     captured = capsys.readouterr()
     output = _patch_filename(feature_file, captured.out)
+
     assert output.strip() == expected_output.read_text("utf8").strip()
 
 
