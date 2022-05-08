@@ -1,0 +1,5 @@
+************* disabled_messages_in_config.feature
+disabled_messages_in_config.feature:3:5: Common tags can be moved to the parent element (tag-could-be-on-parent)
+disabled_messages_in_config.feature:9:5: Common tags can be moved to the parent element (tag-could-be-on-parent)
+disabled_messages_in_config.feature:5:9: Consider putting common 'Given' steps in a Background (consider-using-background)
+disabled_messages_in_config.feature:11:9: Consider putting common 'Given' steps in a Background (consider-using-background)

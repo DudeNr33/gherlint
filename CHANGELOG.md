@@ -7,6 +7,12 @@ New checks:
 * ``only-given-allowed-in-background``
 * ``tag-could-be-on-parent``
 
+Other changes:
+* Add support for configuration from a file. The file must be in `.toml` format.
+  You can include the configuration in your `pyproject.toml`, or if you don't use that,
+  you can create a `gherlint.toml` file in the root of your project.
+* Individual messages can now be disabled in the configuration file (section: reporting, option: disable).
+
 ## V0.4.0
 New checks:
 * ``unused-parameter``

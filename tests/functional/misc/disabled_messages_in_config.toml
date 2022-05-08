@@ -1,0 +1,2 @@
+[reporting]
+disable = ["missing-scenario-name", "C103"]
