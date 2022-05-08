@@ -1,4 +1,4 @@
-@any_feature_tag
+@any_feature_tag @wip
 Feature: Functional test for feature-tags-pattern-missmatch
 
     Scenario: Feature tags pattern missmatch
