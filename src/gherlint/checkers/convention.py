@@ -76,4 +76,4 @@ class ConventionsChecker(BaseChecker):
 
 
 def register_checker(registry: CheckerRegistry) -> None:
-    registry.register(ConventionChecker)
+    registry.register(ConventionsChecker)
