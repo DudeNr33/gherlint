@@ -3,3 +3,7 @@ scenario_tags_pattern_mismatch.feature:4:5: Scenario tags do not follow the patt
 |(?:@JIRA-\d{1,4})?  # Optional JIRA issue tag
 |(?:@wip)?  # Optional wip tag
  (scenario-tags-pattern-mismatch)
+scenario_tags_pattern_mismatch.feature:10:5: Scenario tags do not follow the pattern: (@success|@fail)  # Success or fail scenario
+|(?:@JIRA-\d{1,4})?  # Optional JIRA issue tag
+|(?:@wip)?  # Optional wip tag
+ (scenario-tags-pattern-mismatch)

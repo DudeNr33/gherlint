@@ -1,10 +1,21 @@
 Feature: Functional test for scenario-tags-pattern-mismatch
 
     @any_scenario_tag @success
-    Scenario: Missing required scenario tags
-        Given I have configured required scenario tags
+    Scenario: Scenario tags pattern missmatch
+        Given I have configured a pattern for scenario tags
         When I run gherlint
-        Then I want missing-required-scenario-tags to trigger
+        Then I want scenario-tags-pattern-missmatch to trigger
+
+    @any_scenario_tag @success
+    Scenario Outline: Scenario Outline tags pattern missmatch
+        Given I have configured a pattern for scenario tags
+        When I run gherlint with <test>
+        Then I want scenario-tags-pattern-missmatch to trigger
+
+        Examples:
+            | test |
+            | 1    |
+            | 2    |
 
     @success
     Scenario: Sample scenario
