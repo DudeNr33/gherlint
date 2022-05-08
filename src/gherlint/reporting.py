@@ -1,9 +1,7 @@
-from __future__ import annotations
-
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List
 
 from gherlint.exceptions import DuplicateMessageError, UnknownMessageError
 from gherlint.objectmodel.nodes import Document, Node
@@ -67,7 +65,7 @@ class MessageStore:
 
 class ReporterOptions(Options):
     config_section = "reporting"
-    disable: list[str] = Field(
+    disable: List[str] = Field(
         default_factory=list, description="List of messages to disable."
     )
 
