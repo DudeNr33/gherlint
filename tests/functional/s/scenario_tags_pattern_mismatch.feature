@@ -6,7 +6,7 @@ Feature: Functional test for scenario-tags-pattern-mismatch
         When I run gherlint
         Then I want scenario-tags-pattern-missmatch to trigger
 
-    @any_scenario_tag @success
+    @any_scenario_tag @fail
     Scenario Outline: Scenario Outline tags pattern missmatch
         Given I have configured a pattern for scenario tags
         When I run gherlint with <test>
