@@ -1,13 +1,13 @@
 Feature: Functional test for scenario-tags-pattern-mismatch
 
     @any_scenario_tag @success
-    Scenario: Scenario tags pattern missmatch
+    Scenario: Scenario tags pattern missmatch due to unknown tag
         Given I have configured a pattern for scenario tags
         When I run gherlint
         Then I want scenario-tags-pattern-missmatch to trigger
 
     @any_scenario_tag @fail
-    Scenario Outline: Scenario Outline tags pattern missmatch
+    Scenario Outline: Scenario Outline tags pattern missmatch due to unknown tag
         Given I have configured a pattern for scenario tags
         When I run gherlint with <test>
         Then I want scenario-tags-pattern-missmatch to trigger
@@ -17,26 +17,32 @@ Feature: Functional test for scenario-tags-pattern-mismatch
             | 1    |
             | 2    |
 
+    @jira-001 @success
+    Scenario: Scenario tags pattern missmatch due to wrong order
+        Given I have configured a pattern for scenario tags
+        When I run gherlint
+        Then I want scenario-tags-pattern-missmatch to trigger
+
     @success
-    Scenario: Sample scenario
+    Scenario: Only required success tag
         Given something
         When something else
         Then something else
 
     @fail
-    Scenario: Sample scenario 2
-        Given something
-        When something else
-        Then something else
-
-    @JIRA-999
-    Scenario: Sample scenario 3
+    Scenario: Only required fail tag
         Given something
         When something else
         Then something else
 
     @wip
-    Scenario: Sample scenario 4
+    Scenario: Only required wip tag
+        Given something
+        When something else
+        Then something else
+
+    @wip @jira-002
+    Scenario: Required wip tag and optional jira tag
         Given something
         When something else
         Then something else
