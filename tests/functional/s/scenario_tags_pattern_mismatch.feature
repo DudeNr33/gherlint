@@ -46,3 +46,15 @@ Feature: Functional test for scenario-tags-pattern-mismatch
         Given something
         When something else
         Then something else
+
+    @wip @jira-003 @slow
+    Scenario: All tags
+        Given something
+        When something else
+        Then something else
+
+    @success @slow
+    Scenario: Required success tag and optional slow tag
+        Given something
+        When something else
+        Then something else
