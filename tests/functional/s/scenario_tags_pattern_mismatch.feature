@@ -18,25 +18,25 @@ Feature: Functional test for scenario-tags-pattern-mismatch
             | 2    |
 
     @success
-    Scenario: Only required success tag
+    Scenario: Only success tag
         Given something
         When something else
         Then something else
 
     @fail
-    Scenario: Only required fail tag
+    Scenario: Only fail tag
         Given something
         When something else
         Then something else
 
     @wip
-    Scenario: Only required wip tag
+    Scenario: Only wip tag
         Given something
         When something else
         Then something else
 
     @wip @jira-001
-    Scenario: Required wip tag and optional jira tag
+    Scenario: wip tag and jira tag
         Given something
         When something else
         Then something else
@@ -48,7 +48,7 @@ Feature: Functional test for scenario-tags-pattern-mismatch
         Then something else
 
     @success @slow
-    Scenario: Required success tag and optional slow tag
+    Scenario: success tag and slow tag
         Given something
         When something else
         Then something else
