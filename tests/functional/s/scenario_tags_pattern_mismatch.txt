@@ -1,13 +1,9 @@
 ************* scenario_tags_pattern_mismatch.feature
-scenario_tags_pattern_mismatch.feature:4:5: Scenario tags do not follow the pattern: (@success|@fail|@wip)  # Required success / fail / wip tag
-(?:\s@jira-\d{1,4})?  # Optional jira tag
-(?:\s@slow)?  # Optional slow tag
+scenario_tags_pattern_mismatch.feature:3:5: Scenario tags do not follow the pattern: @success|@fail|@wip  # General status tag
+|@jira-\d{1,4}  # Jira issue tag
+|@slow  # Execution speed type tag
  (scenario-tags-pattern-mismatch)
-scenario_tags_pattern_mismatch.feature:10:5: Scenario tags do not follow the pattern: (@success|@fail|@wip)  # Required success / fail / wip tag
-(?:\s@jira-\d{1,4})?  # Optional jira tag
-(?:\s@slow)?  # Optional slow tag
- (scenario-tags-pattern-mismatch)
-scenario_tags_pattern_mismatch.feature:21:5: Scenario tags do not follow the pattern: (@success|@fail|@wip)  # Required success / fail / wip tag
-(?:\s@jira-\d{1,4})?  # Optional jira tag
-(?:\s@slow)?  # Optional slow tag
+scenario_tags_pattern_mismatch.feature:9:5: Scenario tags do not follow the pattern: @success|@fail|@wip  # General status tag
+|@jira-\d{1,4}  # Jira issue tag
+|@slow  # Execution speed type tag
  (scenario-tags-pattern-mismatch)

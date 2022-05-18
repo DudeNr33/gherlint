@@ -1,2 +1,2 @@
 [convention]
-feature_tags_pattern = "(?:@wip)?"
+feature_tags_pattern = "@wip"

@@ -1,2 +1,2 @@
 ************* feature_tags_pattern_mismatch.feature
-feature_tags_pattern_mismatch.feature:2:1: Feature tags do not follow the pattern: (?:@wip)? (feature-tags-pattern-mismatch)
+feature_tags_pattern_mismatch.feature:1:1: Feature tags do not follow the pattern: @wip (feature-tags-pattern-mismatch)

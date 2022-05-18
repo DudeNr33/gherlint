@@ -1,5 +1,5 @@
 import re
-from typing import Optional, Pattern, Union
+from typing import Optional, Pattern
 
 from pydantic import validator
 
@@ -41,37 +41,53 @@ class ConventionsChecker(BaseChecker):
         ),
     ]
 
-    def visit_feature(self, node: nodes.Feature) -> None:
-        if self.options.feature_tags_pattern:
-            self._check_node_tags_with_pattern(
-                node,
-                self.options.feature_tags_pattern,
-                "feature-tags-pattern-mismatch",
-            )
+    # def visit_feature(self, node: nodes.Feature) -> None:
+    #     if self.options.feature_tags_pattern:
+    #         self._check_node_tags_with_pattern(
+    #             node,
+    #             self.options.feature_tags_pattern,
+    #             "feature-tags-pattern-mismatch",
+    #         )
 
-    def visit_scenario(self, node: nodes.Scenario) -> None:
-        if self.options.scenario_tags_pattern:
-            self._check_node_tags_with_pattern(
-                node,
-                self.options.scenario_tags_pattern,
-                "scenario-tags-pattern-mismatch",
-            )
+    # def visit_scenario(self, node: nodes.Scenario) -> None:
+    #     if self.options.scenario_tags_pattern:
+    #         self._check_node_tags_with_pattern(
+    #             node,
+    #             self.options.scenario_tags_pattern,
+    #             "scenario-tags-pattern-mismatch",
+    #         )
 
-    def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
-        if self.options.scenario_tags_pattern:
-            self._check_node_tags_with_pattern(
-                node,
-                self.options.scenario_tags_pattern,
-                "scenario-tags-pattern-mismatch",
-            )
+    # def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
+    #     if self.options.scenario_tags_pattern:
+    #         self._check_node_tags_with_pattern(
+    #             node,
+    #             self.options.scenario_tags_pattern,
+    #             "scenario-tags-pattern-mismatch",
+    #         )
 
-    def _check_node_tags_with_pattern(
+    def visit_tag(self, node: nodes.Tag) -> None:
+        if isinstance(node.parent, nodes.Feature):
+            if self.options.feature_tags_pattern:
+                self._check_tag_with_pattern(
+                    node,
+                    self.options.feature_tags_pattern,
+                    "feature-tags-pattern-mismatch",
+                )
+        elif isinstance(node.parent, (nodes.Scenario, nodes.ScenarioOutline)):
+            if self.options.scenario_tags_pattern:
+                self._check_tag_with_pattern(
+                    node,
+                    self.options.scenario_tags_pattern,
+                    "scenario-tags-pattern-mismatch",
+                )
+
+    def _check_tag_with_pattern(
         self,
-        node: Union[nodes.Feature, nodes.Scenario, nodes.ScenarioOutline],
+        node: nodes.Tag,
         pattern: Pattern,
         message_id_or_name: str,
     ) -> None:
-        if not pattern.fullmatch(" ".join(tag.name for tag in node.tags)):
+        if not pattern.match(node.name):
             self.reporter.add_message(message_id_or_name, node, pattern=pattern.pattern)
 
 

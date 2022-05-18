@@ -17,12 +17,6 @@ Feature: Functional test for scenario-tags-pattern-mismatch
             | 1    |
             | 2    |
 
-    @jira-001 @success
-    Scenario: Scenario tags pattern missmatch due to wrong order
-        Given I have configured a pattern for scenario tags
-        When I run gherlint
-        Then I want scenario-tags-pattern-missmatch to trigger
-
     @success
     Scenario: Only required success tag
         Given something
@@ -41,13 +35,13 @@ Feature: Functional test for scenario-tags-pattern-mismatch
         When something else
         Then something else
 
-    @wip @jira-002
+    @wip @jira-001
     Scenario: Required wip tag and optional jira tag
         Given something
         When something else
         Then something else
 
-    @wip @jira-003 @slow
+    @wip @jira-002 @slow
     Scenario: All tags
         Given something
         When something else
@@ -55,6 +49,19 @@ Feature: Functional test for scenario-tags-pattern-mismatch
 
     @success @slow
     Scenario: Required success tag and optional slow tag
+        Given something
+        When something else
+        Then something else
+
+    @jira-003 @success
+    Scenario: Wrong order, but it's ok
+        Given something
+        When something else
+        Then something else
+
+    @jira-004
+    @success
+    Scenario: Multiline tags
         Given something
         When something else
         Then something else
