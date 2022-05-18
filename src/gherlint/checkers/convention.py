@@ -41,45 +41,22 @@ class ConventionsChecker(BaseChecker):
         ),
     ]
 
-    # def visit_feature(self, node: nodes.Feature) -> None:
-    #     if self.options.feature_tags_pattern:
-    #         self._check_node_tags_with_pattern(
-    #             node,
-    #             self.options.feature_tags_pattern,
-    #             "feature-tags-pattern-mismatch",
-    #         )
-
-    # def visit_scenario(self, node: nodes.Scenario) -> None:
-    #     if self.options.scenario_tags_pattern:
-    #         self._check_node_tags_with_pattern(
-    #             node,
-    #             self.options.scenario_tags_pattern,
-    #             "scenario-tags-pattern-mismatch",
-    #         )
-
-    # def visit_scenariooutline(self, node: nodes.ScenarioOutline) -> None:
-    #     if self.options.scenario_tags_pattern:
-    #         self._check_node_tags_with_pattern(
-    #             node,
-    #             self.options.scenario_tags_pattern,
-    #             "scenario-tags-pattern-mismatch",
-    #         )
-
     def visit_tag(self, node: nodes.Tag) -> None:
-        if isinstance(node.parent, nodes.Feature):
-            if self.options.feature_tags_pattern:
-                self._check_tag_with_pattern(
-                    node,
-                    self.options.feature_tags_pattern,
-                    "feature-tags-pattern-mismatch",
-                )
-        elif isinstance(node.parent, (nodes.Scenario, nodes.ScenarioOutline)):
-            if self.options.scenario_tags_pattern:
-                self._check_tag_with_pattern(
-                    node,
-                    self.options.scenario_tags_pattern,
-                    "scenario-tags-pattern-mismatch",
-                )
+        if isinstance(node.parent, nodes.Feature) and self.options.feature_tags_pattern:
+            self._check_tag_with_pattern(
+                node,
+                self.options.feature_tags_pattern,
+                "feature-tags-pattern-mismatch",
+            )
+        elif (
+            isinstance(node.parent, (nodes.Scenario, nodes.ScenarioOutline))
+            and self.options.scenario_tags_pattern
+        ):
+            self._check_tag_with_pattern(
+                node,
+                self.options.scenario_tags_pattern,
+                "scenario-tags-pattern-mismatch",
+            )
 
     def _check_tag_with_pattern(
         self,
