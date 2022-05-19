@@ -32,12 +32,12 @@ class ConventionsChecker(BaseChecker):
         Message(
             "C401",
             "feature-tags-pattern-mismatch",
-            "Feature tags do not follow the pattern: {pattern}",
+            "Feature tag {tag} do not follow the pattern: {pattern}",
         ),
         Message(
             "C402",
             "scenario-tags-pattern-mismatch",
-            "Scenario tags do not follow the pattern: {pattern}",
+            "Scenario tag {tag} do not follow the pattern: {pattern}",
         ),
     ]
 
@@ -65,7 +65,9 @@ class ConventionsChecker(BaseChecker):
         message_id_or_name: str,
     ) -> None:
         if not pattern.match(node.name):
-            self.reporter.add_message(message_id_or_name, node, pattern=pattern.pattern)
+            self.reporter.add_message(
+                message_id_or_name, node, tag=node.name, pattern=pattern.pattern
+            )
 
 
 def register_checker(registry: CheckerRegistry) -> None:
