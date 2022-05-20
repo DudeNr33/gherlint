@@ -1,0 +1,6 @@
+[convention]
+scenario_tags_pattern = '''
+@success|@fail|@wip  # General status tag
+|@jira-\d{1,4}  # Jira issue tag
+|@slow  # Execution speed type tag
+'''

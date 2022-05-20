@@ -1,0 +1,9 @@
+************* scenario_tags_pattern_mismatch.feature
+scenario_tags_pattern_mismatch.feature:3:5: Scenario tag @any_scenario_tag do not follow the pattern: @success|@fail|@wip  # General status tag
+|@jira-\d{1,4}  # Jira issue tag
+|@slow  # Execution speed type tag
+ (scenario-tags-pattern-mismatch)
+scenario_tags_pattern_mismatch.feature:9:5: Scenario tag @any_scenario_tag do not follow the pattern: @success|@fail|@wip  # General status tag
+|@jira-\d{1,4}  # Jira issue tag
+|@slow  # Execution speed type tag
+ (scenario-tags-pattern-mismatch)
