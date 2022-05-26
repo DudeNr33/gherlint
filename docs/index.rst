@@ -11,6 +11,7 @@ Welcome to gherlint's documentation!
    :caption: Contents:
 
    messages/list_of_messages
+   options/list_of_options
    technical_reference/node_classes
    technical_reference/architecture
 
