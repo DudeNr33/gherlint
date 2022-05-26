@@ -1,6 +1,7 @@
 """Helper script to generate a table of all messages that gherlint emits."""
 
 from typing import Dict
+
 from sphinx.application import Sphinx
 from utils import TableWriter
 
