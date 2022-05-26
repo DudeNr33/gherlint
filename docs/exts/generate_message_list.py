@@ -1,38 +1,13 @@
 """Helper script to generate a table of all messages that gherlint emits."""
 
-from typing import Dict, List
+from typing import Dict
 
 from sphinx.application import Sphinx
+from utils import TableWriter
 
 from gherlint.checkers.base_checker import BaseChecker
 from gherlint.linter import GherkinLinter
 from gherlint.registry import CheckerRegistry
-
-
-class TableWriter:
-    def __init__(self) -> None:
-        self._lines: List[str] = []
-
-    def add_directive(self) -> None:
-        self._lines.append(".. list-table::")
-        self._lines.append("   :header-rows: 1")
-        self._lines.append("")
-
-    def add_header(self, *headings: str) -> None:
-        self.add_row(*headings)
-
-    def add_row(self, *values: str) -> None:
-        first = True
-        for value in values:
-            if first:
-                content = f"   * - {value}"
-                first = False
-            else:
-                content = f"     - {value}"
-            self._lines.append(content)
-
-    def __str__(self) -> str:
-        return "\n".join(self._lines)
 
 
 def main(app: Sphinx) -> None:
