@@ -1,6 +1,6 @@
 """Helper script to build the list of options for checkers, reporters etc."""
 import inspect
-from typing import Any
+from typing import Any, Dict
 
 from sphinx.application import Sphinx
 from sphinx.util import logging
@@ -66,6 +66,6 @@ def _render_options(options_class: Options) -> TableWriter:
     return options_table
 
 
-def setup(app: Sphinx) -> dict[str, str]:
+def setup(app: Sphinx) -> Dict[str, str]:
     app.connect("builder-inited", main)
     return {"version": "0.1"}

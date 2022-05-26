@@ -1,5 +1,6 @@
 """Helper script to generate a table of all messages that gherlint emits."""
 
+from typing import Dict
 from sphinx.application import Sphinx
 from utils import TableWriter
 
@@ -32,6 +33,6 @@ def _get_msg_prefix(checker: BaseChecker) -> int:
     return int(checker.MESSAGES[0].id[1:-2])
 
 
-def setup(app: Sphinx) -> dict[str, str]:
+def setup(app: Sphinx) -> Dict[str, str]:
     app.connect("builder-inited", main)
     return {"version": "0.1"}

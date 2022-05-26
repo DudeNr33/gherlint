@@ -23,7 +23,7 @@ class BaseChecker:
             self.options = options_class.from_config()
 
     @classmethod
-    def get_options_class(cls) -> Type[Options] | None:
+    def get_options_class(cls) -> Optional[Type[Options]]:
         annotations = getattr(cls, "__annotations__", {})
         options_class: Optional[Type[Options]] = annotations.get("options")
         if options_class is not None and inspect.isclass(options_class):

@@ -1,9 +1,11 @@
 """Common utilities for Sphinx extension scripts."""
 
+from typing import List
+
 
 class TableWriter:
     def __init__(self) -> None:
-        self._lines: list[str] = []
+        self._lines: List[str] = []
 
     def add_directive(self) -> None:
         self._lines.append(".. list-table::")
