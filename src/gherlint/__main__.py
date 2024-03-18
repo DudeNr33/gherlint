@@ -1,6 +1,7 @@
 """
 ``gherlint`` is a linter for Cucumber Gherkin feature files.
 """
+
 from pathlib import Path
 
 import click

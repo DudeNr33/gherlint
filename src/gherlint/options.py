@@ -1,4 +1,5 @@
 """Options and options handling for checkers of other classes."""
+
 from __future__ import annotations
 
 from typing import ClassVar
