@@ -1,6 +1,7 @@
 """
 Nodes representing different elements of a Gherkin feature file.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
