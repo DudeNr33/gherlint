@@ -1,4 +1,5 @@
 """Unit tests for ConsistencyChecker"""
+
 from unittest.mock import Mock
 
 import pytest
