@@ -1,4 +1,5 @@
 """Parser for Gherkin feature files."""
+
 from pathlib import Path
 from typing import NamedTuple, Optional
 

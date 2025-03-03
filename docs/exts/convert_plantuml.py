@@ -1,4 +1,5 @@
 """Helper script to convert all .puml/.plantuml files stored under docs/diagrams into images."""
+
 from __future__ import annotations
 
 from itertools import chain
