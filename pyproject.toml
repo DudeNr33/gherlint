@@ -1,8 +1,8 @@
-[tool.poetry]
+[project]
 name = "gherlint"
 version = "0.5.0"
 description = "Linter for Gherkin feature files"
-authors = ["Andreas Finkler"]
+authors = [{name = "Andreas Finkler"}]
 license = "MIT license"
 readme = "README.md"
 homepage = "https://github.com/DudeNr33/gherlint"
@@ -13,19 +13,19 @@ classifiers = [
     "Topic :: Software Development :: Testing",
     "Topic :: Software Development :: Quality Assurance"
 ]
+requires-python = ">=3.8"
+dependencies = [
+    "click>=8.0.1",
+    "gherkin-official>=22.0.0",
+    "parse>=1.19.0",
+    "pydantic>=1.9.0",
+    "tomli>=1.0.0"
+]
 
 [tool.poetry.scripts]
 gherlint = 'gherlint.__main__:cli'
 
-[tool.poetry.dependencies]
-python = "^3.8"
-gherkin-official = "^24.0.0"
-click = "^8.0.1"
-parse = "^1.19.0"
-tomli = "^1.0.0"
-pydantic = "^1.9.0"
-
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pylint = "^2.11.1"
 pytest = "^6.2.5"
 pre-commit = "^2.15.0"
