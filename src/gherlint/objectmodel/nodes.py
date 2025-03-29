@@ -1,6 +1,7 @@
 """
 Nodes representing different elements of a Gherkin feature file.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -81,7 +82,7 @@ class Document(Node):
         return [self.feature]
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], parent: Node = None) -> Document:
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node] = None) -> Document:
         feature_data = data.get("feature")
         instance = cls(
             line=0,
@@ -109,7 +110,7 @@ class Feature(Node):
         name: str,
         description: str,
         scenarios: List[Union[Scenario, ScenarioOutline]],
-        background: Background = None,
+        background: Optional[Background] = None,
     ):
         super().__init__(parent, line, column)
         self.tags = tags

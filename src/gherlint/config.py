@@ -10,7 +10,9 @@ import tomli
 class Config(UserDict):
     _config: Optional[Config] = None
 
-    def __init__(self, config_file: Path = None, search_path=Path(".")) -> None:
+    def __init__(
+        self, config_file: Optional[Path] = None, search_path=Path(".")
+    ) -> None:
         self._search_path = search_path
         self.config_file = config_file
         config_data = self._load_config_data()
@@ -31,7 +33,7 @@ class Config(UserDict):
         return data
 
     @classmethod
-    def get_config(cls, config_file: Path = None) -> Config:
+    def get_config(cls, config_file: Optional[Path] = None) -> Config:
         """Factory method to access the global config."""
         if not cls._config:
             cls._config = Config(config_file=config_file)

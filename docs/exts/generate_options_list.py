@@ -1,4 +1,5 @@
 """Helper script to build the list of options for checkers, reporters etc."""
+
 import inspect
 from typing import Any, Dict
 

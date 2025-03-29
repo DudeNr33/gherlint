@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Optional
 
 import pytest
 
@@ -19,7 +20,7 @@ def idfn(val):
 
 # pylint: disable=protected-access
 @contextmanager
-def use_config(config: Path = None):
+def use_config(config: Optional[Path] = None):
     """Populates the cached config instance with the config specified for this test."""
     Config._config = None
     Config.get_config(config)

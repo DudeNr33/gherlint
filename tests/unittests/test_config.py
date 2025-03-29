@@ -2,13 +2,12 @@ from pathlib import Path
 from textwrap import dedent
 
 import pytest
-from py._path.local import LocalPath
 
 from gherlint.config import Config
 
 
 @pytest.fixture
-def gherlint_toml(tmpdir: LocalPath) -> Path:
+def gherlint_toml(tmpdir) -> Path:
     cfgfile = Path(tmpdir) / "gherlint.toml"
     content = """
     [checkers]
@@ -20,7 +19,7 @@ def gherlint_toml(tmpdir: LocalPath) -> Path:
 
 
 @pytest.fixture
-def pyproject_toml(tmpdir: LocalPath) -> Path:
+def pyproject_toml(tmpdir) -> Path:
     cfgfile = Path(tmpdir) / "pyproject.toml"
     content = """
     [tool.gherlint.checkers]
@@ -47,6 +46,6 @@ def test_load_implicit_pyproject_toml(pyproject_toml: Path) -> None:
 
 
 @pytest.mark.usefixtures("gherlint_toml", "pyproject_toml")
-def test_gherlint_toml_takes_precedence(tmpdir: LocalPath) -> None:
+def test_gherlint_toml_takes_precedence(tmpdir) -> None:
     config = Config(search_path=Path(tmpdir))
     assert config["checkers"]["my_checker"] is True

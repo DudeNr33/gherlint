@@ -1,4 +1,5 @@
 """Options and options handling for checkers of other classes."""
+
 from __future__ import annotations
 
 from typing import ClassVar
@@ -19,5 +20,5 @@ class Options(BaseModel):
     def from_config(cls) -> Options:
         """Create options from the config."""
         config = Config.get_config()
-        options = config.get(cls.config_section, {})
+        options = config.get(cls.config_section, {})  # type: ignore
         return cls(**options)

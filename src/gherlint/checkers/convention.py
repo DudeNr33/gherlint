@@ -16,7 +16,7 @@ class ConventionsCheckerOptions(Options):
     feature_tags_pattern: Optional[Pattern]
     scenario_tags_pattern: Optional[Pattern]
 
-    # pylint: disable=no-self-argument, disable=no-self-use
+    # pylint: disable=no-self-argument
     @validator("feature_tags_pattern", "scenario_tags_pattern", pre=True)
     def compile_regex(cls, value: str) -> Optional[Pattern]:
         if value:
