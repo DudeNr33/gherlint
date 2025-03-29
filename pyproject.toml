@@ -1,42 +1,48 @@
-[tool.poetry]
+[project]
 name = "gherlint"
 version = "0.5.0"
 description = "Linter for Gherkin feature files"
-authors = ["Andreas Finkler"]
+authors = [{ name = "Andreas Finkler" }]
 license = "MIT license"
 readme = "README.md"
-homepage = "https://github.com/DudeNr33/gherlint"
-keywords = ["gherkin", "cucumber", "lint", "static analysis", "internal quality"]
+keywords = [
+    "gherkin",
+    "cucumber",
+    "lint",
+    "static analysis",
+    "internal quality",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Topic :: Software Development",
     "Topic :: Software Development :: Testing",
-    "Topic :: Software Development :: Quality Assurance"
+    "Topic :: Software Development :: Quality Assurance",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "click>=8.0.1",
+    "gherkin-official>=22.0.0",
+    "parse>=1.19.0",
+    "pydantic>=1.9.0",
+    "tomli>=1.0.0",
 ]
 
 [tool.poetry.scripts]
 gherlint = 'gherlint.__main__:cli'
 
-[tool.poetry.dependencies]
-python = "^3.8"
-gherkin-official = "^22.0.0"
-click = "^8.0.1"
-parse = "^1.19.0"
-tomli = "^1.0.0"
-pydantic = "^1.9.0"
-
-[tool.poetry.dev-dependencies]
-pylint = "^2.11.1"
-pytest = "^6.2.5"
-pre-commit = "^2.15.0"
-black = "^21.9b0"
-isort = "^5.9.3"
-pylint-pytest = "^1.1.2"
-mypy = "^0.910"
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.3.6"
+pytest = "^8.2.0"
+pre-commit = "^4.2.0"
+black = "^25.1.0"
+isort = "^6.0.1"
+pylint-pytest = "^1.1.8"
+mypy = "^1.15.0"
 Sphinx = "^4.2.0"
 python-docs-theme = "^2021.11.1"
 sphinxcontrib-plantuml = "^0.22"
 plantuml = "^0.3.0"
+packaging = "^24.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -47,13 +53,13 @@ load-plugins = "pylint_pytest,pylint.extensions.mccabe"
 
 [tool.pylint.messages_control]
 enable = "useless-suppression"
-disable = "missing-class-docstring,missing-module-docstring,missing-function-docstring,too-few-public-methods"
+disable = "missing-class-docstring,missing-module-docstring,missing-function-docstring,too-few-public-methods,too-many-positional-arguments"
 
 [tool.pylint.format]
 max-line-length = 120
 
 [tool.pylint.design]
-max-args=10
+max-args = 10
 
 [tool.isort]
 profile = "black"

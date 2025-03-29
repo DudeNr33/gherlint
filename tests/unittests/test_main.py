@@ -6,6 +6,7 @@ called with the expected set of parameters.
 Out of scope:
 End-to-end tests which actually execute any code outside ``__main__.py``
 """
+
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 

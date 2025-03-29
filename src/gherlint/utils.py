@@ -22,5 +22,5 @@ def get_keyword_candidates(keyword: str) -> List[str]:
     """Get a list of the possible words of the keyword in all languages."""
     candidates = []
     for language in DIALECTS.values():
-        candidates.extend(language[keyword])
+        candidates.extend(language[keyword])  # type: ignore
     return candidates

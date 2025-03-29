@@ -1,4 +1,5 @@
 """Parser for Gherkin feature files."""
+
 from pathlib import Path
 from typing import NamedTuple, Optional
 
@@ -32,7 +33,7 @@ class GherkinParser:
         if self.language not in ("en", "unknown"):
             self._check_and_fix_language()
         try:
-            data = self.parser.parse(self.content)
+            data = dict(self.parser.parse(self.content))
             data["filename"] = str(filepath)
             data["offset"] = self.offset
             document = nodes.Document.from_dict(data)

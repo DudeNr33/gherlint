@@ -9,7 +9,7 @@ from gherlint.objectmodel.nodes import Document, Node
 
 @dataclass(frozen=True)
 class Message:
-    id: str  # ID, like E001  pylint: disable=invalid-name
+    id: str  # ID, like E001
     name: str  # unique short name, like missing-feature-name
     text: str  # More detailed textual description of the problem and optionally a hint how to solve the problem.
 
