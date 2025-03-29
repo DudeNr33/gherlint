@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
 
 from gherlint.config import Config
 

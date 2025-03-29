@@ -5,7 +5,7 @@ Nodes representing different elements of a Gherkin feature file.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Protocol, Self, Tuple, Union
+from typing import Any, Dict, List, Optional, Protocol, Tuple, Union
 
 import parse
 
@@ -53,7 +53,7 @@ class Node(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Self:
+    def from_dict(cls, data: Dict[str, Any], parent: Optional[Node]) -> Node:
         """Create a node instance from the dictionary returned by the gherkin parser."""
 
 
