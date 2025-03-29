@@ -26,17 +26,17 @@ tomli = "^1.0.0"
 pydantic = "^1.9.0"
 
 [tool.poetry.dev-dependencies]
-pylint = "^2.11.1"
-pytest = "^6.2.5"
-pre-commit = "^2.15.0"
+Sphinx = "^8.2.3"
 black = "^21.9b0"
 isort = "^5.9.3"
-pylint-pytest = "^1.1.2"
 mypy = "^0.910"
-Sphinx = "^4.2.0"
-python-docs-theme = "^2021.11.1"
-sphinxcontrib-plantuml = "^0.22"
 plantuml = "^0.3.0"
+pre-commit = "^4.2.0"
+pylint = "^2.11.1"
+pylint-pytest = "^1.1.2"
+pytest = "^6.2.5"
+python-docs-theme = "^2021.11.1"
+sphinxcontrib-plantuml = "^0.30"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
