@@ -36,6 +36,6 @@ The following work items are planned for the upcoming releases:
     * Extend object model as necessary for checkers
     * Reach a stable interface for object model, checkers and reporters
     * Add documentation
-* V1.x - V2.0:
     * Support configuration to enable/disable individual messages
+* V1.x - V2.0:
     * Implement plugin architecture to allow users to add custom checkers

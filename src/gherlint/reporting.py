@@ -1,10 +1,11 @@
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List
 
 from gherlint.exceptions import DuplicateMessageError, UnknownMessageError
 from gherlint.objectmodel.nodes import Document, Node
+from gherlint.options import Field, Options
 
 
 @dataclass(frozen=True)
@@ -62,8 +63,20 @@ class MessageStore:
             raise UnknownMessageError(f"Message name '{name}' not found.") from exc
 
 
+class ReporterOptions(Options):
+    config_section = "reporting"
+    disable: List[str] = Field(
+        default_factory=list, description="List of messages to disable."
+    )
+
+
 class Reporter(ABC):
     """Base class for reporters."""
+
+    options: ReporterOptions
+
+    def __init__(self):
+        self.options = ReporterOptions.from_config()
 
     def add_message(self, id_or_name: str, node: Node, **format_args) -> None:
         """Add a message, identified by its id or name, that shall be emitted"""
@@ -75,6 +88,9 @@ class Reporter(ABC):
             raise ValueError(
                 f"{id_or_name} matches neither the pattern for a message ID nor a message name."
             )
+        if message.id in self.options.disable or message.name in self.options.disable:
+            # Message is disabled
+            return
         self.emit(message, node, **format_args)
 
     @abstractmethod
@@ -89,6 +105,7 @@ class TextReporter(Reporter):
     MSG_TEMPLATE = "{file}:{line}:{column}: {text} ({name})"
 
     def __init__(self):
+        super().__init__()
         self.current_file = None
 
     def emit(self, message: Message, node: Node, **format_args) -> None:

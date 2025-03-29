@@ -64,3 +64,15 @@ List of Messages
    * - C301
      - duplicated-scenario-name
      - Scenarios inside a Feature should have unique names
+   * - C302
+     - only-given-allowed-in-background
+     - Only 'Given' steps are allowed in a Background
+   * - R301
+     - tag-could-be-on-parent
+     - Common tags can be moved to the parent element
+   * - C401
+     - feature-tags-pattern-mismatch
+     - Feature tag {tag} do not follow the pattern: {pattern}
+   * - C402
+     - scenario-tags-pattern-mismatch
+     - Scenario tag {tag} do not follow the pattern: {pattern}
