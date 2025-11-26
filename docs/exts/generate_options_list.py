@@ -1,7 +1,7 @@
 """Helper script to build the list of options for checkers, reporters etc."""
 
 import inspect
-from typing import Any, Dict
+from typing import Any, Dict, Type
 
 from sphinx.application import Sphinx
 from sphinx.util import logging
@@ -50,10 +50,10 @@ def main(app: Sphinx) -> None:
 
 
 def _is_options_class(obj: Any) -> bool:
-    return inspect.isclass(obj) and issubclass(obj, Options) and not obj is Options
+    return inspect.isclass(obj) and issubclass(obj, Options) and obj is not Options
 
 
-def _render_options(options_class: Options) -> TableWriter:
+def _render_options(options_class: Type[Options]) -> TableWriter:
     options_table = TableWriter()
     options_table.add_directive()
     options_table.add_header(*TABLE_HEADINGS)

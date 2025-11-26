@@ -6,25 +6,25 @@ authors = [{ name = "Andreas Finkler" }]
 license = "MIT license"
 readme = "README.md"
 keywords = [
-    "gherkin",
-    "cucumber",
-    "lint",
-    "static analysis",
-    "internal quality",
+  "gherkin",
+  "cucumber",
+  "lint",
+  "static analysis",
+  "internal quality",
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Topic :: Software Development",
-    "Topic :: Software Development :: Testing",
-    "Topic :: Software Development :: Quality Assurance",
+  "Development Status :: 3 - Alpha",
+  "Topic :: Software Development",
+  "Topic :: Software Development :: Testing",
+  "Topic :: Software Development :: Quality Assurance",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
-    "click>=8.0.1",
-    "gherkin-official>=22.0.0",
-    "parse>=1.19.0",
-    "pydantic (>=1.9.0,<2.0.0)",
-    "tomli>=1.0.0",
+  "click>=8.0.1",
+  "gherkin-official>=22.0.0",
+  "parse>=1.19.0",
+  "pydantic (>=1.9.0,<2.0.0)",
+  "tomli>=1.0.0",
 ]
 
 [tool.poetry.scripts]
@@ -35,11 +35,11 @@ pylint = "^3.3.6"
 pytest = "^8.2.0"
 pre-commit = "^4.2.0"
 black = "^25.1.0"
-isort = "^6.0.1"
+isort = "^6.0.0"
 pylint-pytest = "^1.1.8"
 mypy = "^1.15.0"
-Sphinx = "^4.2.0"
-python-docs-theme = "^2021.11.1"
+Sphinx = ">=7.0"
+python-docs-theme = ">=2021.11.1"
 sphinxcontrib-plantuml = "^0.22"
 plantuml = "^0.3.0"
 packaging = "^24.2"
