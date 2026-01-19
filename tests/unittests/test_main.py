@@ -22,9 +22,7 @@ class TestGlobalOptions:
     def test_global_help(option: str) -> None:
         output = CliRunner().invoke(cli, [option]).output
         # the normal CLI returns "Usage: gherlint [OPTIONS] ...", but the CliRunner uses the name of the function.
-        assert (
-            output.strip()
-            == """
+        assert output.strip() == """
 Usage: cli [OPTIONS] COMMAND [ARGS]...
 
   gherlint is a linter for Cucumber Gherkin feature files.
@@ -37,7 +35,6 @@ Commands:
   lint               Perform linting of feature files
   stats              Compute metrics over your feature files
         """.strip()
-        )
 
 
 class TestLintCommand:
